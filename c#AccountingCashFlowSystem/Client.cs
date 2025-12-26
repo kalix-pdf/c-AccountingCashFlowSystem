@@ -13,7 +13,16 @@ public class Client
     public int FullPayment { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public string Amenities { get; set; }
+    public List<ClientAmenities> ClientAmenities { get; set; }
+    public List<ClientRooms> ClientRooms { get; set; }
+}
+public class ClientAmenities
+{
+    public string amenitiesName { get; set; }
+}
+public class ClientRooms
+{
+    public string roomName { get; set; }
 }
 public class AmenitiesAndRooms
 {
@@ -137,48 +146,97 @@ public class ClientDatabase
     }
     public Client GetClient(int clientId)
     {
-        Client clientInfo = new Client();
-        try
+        using (SqlConnection conn = new SqlConnection(connectionString))
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            conn.Open();
+            SqlTransaction trans = conn.BeginTransaction();
+
+            try
             {
-                string query = "SELECT C.FullName, C.TotalAmount, C.isFullPaid, C.DownPayment, C.StartDate, C.EndDate, " +
-                               "STRING_AGG(a.amenitiesName, ', ') AS Amenities " +
-                               "FROM Clients C " +
-                               "LEFT JOIN clientAmenities ca ON C.ClientId = ca.clientID " +
-                               "LEFT JOIN amenities a ON a.amenitiesID = ca.amenitiesID " +
-                               "WHERE C.ClientId = @clientId " +
-                               "GROUP BY C.FullName, C.TotalAmount, C.isFullPaid, C.DownPayment, C.StartDate, C.EndDate";
-                
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@clientId", clientId); 
+                Client clientInfo = null;
 
-                conn.Open();
+                string CQuery = "SELECT FullName, TotalAmount, isFullPaid, DownPayment, StartDate, EndDate FROM Clients WHERE ClientId = @clientId";
 
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (var cmdClient = new SqlCommand(CQuery, conn, trans))
                 {
-                    if (reader.Read())
+                    cmdClient.Parameters.Add("@clientId", SqlDbType.Int).Value = clientId;
+
+                    using (var reader = cmdClient.ExecuteReader())
                     {
-                        clientInfo = new Client
+                        if (reader.Read())
                         {
-                            //ClientId = Convert.ToInt32(reader["ClientId"]),
-                            FullName = reader["FullName"].ToString(),
-                            TotalAmount = Convert.ToInt32(reader["TotalAmount"]),
-                            FullPayment = Convert.ToInt32(reader["isFullPaid"]),
-                            DownPayment = Convert.ToInt32(reader["DownPayment"]),
-                            StartDate = Convert.ToDateTime(reader["StartDate"]),
-                            EndDate = Convert.ToDateTime(reader["EndDate"]),
-                            Amenities = reader["Amenities"].ToString()
-                        };
+                            clientInfo = new Client
+                            {
+                                FullName = reader["FullName"].ToString(),
+                                TotalAmount = Convert.ToInt32(reader["TotalAmount"]),
+                                FullPayment = Convert.ToInt32(reader["isFullPaid"]),
+                                DownPayment = Convert.ToInt32(reader["DownPayment"]),
+                                StartDate = Convert.ToDateTime(reader["StartDate"]),
+                                EndDate = Convert.ToDateTime(reader["EndDate"]),
+                                ClientAmenities = new List<ClientAmenities>(),
+                                ClientRooms = new List<ClientRooms>()
+                            };
+                        }
                     }
                 }
+                if (clientInfo == null)
+                {
+                    trans.Rollback();
+                    return null;
+                }
+
+                string CAquery = "SELECT a.amenitiesName, a.amenitiesID FROM clientAmenities ca JOIN amenities a ON a.amenitiesID = ca.amenitiesID WHERE ca.clientID = @clientId";
+
+                using (var cmdClientAmenities = new SqlCommand(CAquery, conn, trans))
+                {
+                    cmdClientAmenities.Parameters.Add("@clientId", SqlDbType.Int).Value = clientId;
+
+                    using (var reader = cmdClientAmenities.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader["amenitiesID"] != DBNull.Value) 
+                            { 
+                                clientInfo.ClientAmenities.Add(new ClientAmenities 
+                                { 
+                                    amenitiesName = reader["amenitiesName"].ToString() 
+                                }); 
+                            }
+                        }
+                    }
+                }
+
+                string Rquery = "SELECT r.roomName, r.roomID FROM clientRooms cr JOIN rooms r ON r.roomID = cr.roomID WHERE cr.clientID = @clientId";
+
+                using (var cmdClientRooms = new SqlCommand(Rquery, conn, trans))
+                {
+                    cmdClientRooms.Parameters.Add("@clientId", SqlDbType.Int).Value = clientId;
+
+                    using (var reader = cmdClientRooms.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader["roomID"] != DBNull.Value)
+                            {
+                                clientInfo.ClientRooms.Add(new ClientRooms
+                                {
+                                    roomName = reader["roomName"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+
+
+                trans.Commit();
+                return clientInfo;
+            }
+            catch
+            {
+                trans.Rollback(); 
+                throw;
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-        return clientInfo;
     }
     public List<AmenitiesAndRooms> getAmenties()
     {

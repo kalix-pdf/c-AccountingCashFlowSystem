@@ -121,11 +121,21 @@ namespace c_AccountingCashFlowSystem.Forms
 
             var amenityCheckboxes = amenitiesPanel.Controls.OfType<CheckBox>().Where(cb => cb.Name.StartsWith("chkAmenity_"));
 
-            bool anyChecked = amenityCheckboxes.Any(cb => cb.Checked);
+            bool anyCheckedAmenity = amenityCheckboxes.Any(cb => cb.Checked);
 
-            if (!anyChecked)
+            if (!anyCheckedAmenity)
             {
                 MessageBox.Show("Please select at least one amenity.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            var roomCheckboxes = roomsPanel.Controls.OfType<CheckBox>().Where(cb => cb.Name.StartsWith("roomchk_"));
+
+            bool anyCheckedRoom = roomCheckboxes.Any(cb => cb.Checked);
+
+            if (!anyCheckedRoom)
+            {
+                MessageBox.Show("Please select at least one room.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -198,7 +208,7 @@ namespace c_AccountingCashFlowSystem.Forms
                 var amenity = amenities[i];
                 CheckBox cb = new CheckBox();
 
-                cb.Name = "amenitychk" + amenity.amenitiesID;
+                cb.Name = "chkAmenity_" + amenity.amenitiesID;
                 cb.Text = amenity.amenitiesName;
                 cb.Tag = amenity.amenitiesID; 
                 cb.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -224,7 +234,7 @@ namespace c_AccountingCashFlowSystem.Forms
             {
                 var room = rooms[i];
                 CheckBox cb = new CheckBox();
-                cb.Name = "roomchk" + room.roomID;
+                cb.Name = "roomchk_" + room.roomID;
                 cb.Text = room.roomName;
                 cb.Tag = room.roomID; 
                 cb.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

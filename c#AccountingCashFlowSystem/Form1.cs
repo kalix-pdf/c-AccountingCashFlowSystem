@@ -22,6 +22,7 @@ namespace c_AccountingCashFlowSystem
         {
             InitializeComponent();
             random = new Random();
+            this.StartPosition = FormStartPosition.CenterParent;
         }
         private Color SelectThemeColor()
         {
