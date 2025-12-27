@@ -13,7 +13,9 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class viewinfo : Form
     {
         private readonly int _clientId;
-        private Client clientInfo;
+        private int _paymentmethod;
+        private string _referenceNo;
+        private int _amount;
         public viewinfo(int clientId)
         {
             InitializeComponent();
@@ -36,17 +38,26 @@ namespace c_AccountingCashFlowSystem.Forms
                 int columnWidth = 120;
                 int rowHeight = 25;
 
+                _amount = clientInfo.TotalAmount;
+                _paymentmethod = clientInfo.PaymentMethod;
+                _referenceNo = clientInfo.ReferenceNo;
+
                 clientName.Text = clientInfo.FullName;
                 downPayment.Text = $"₱{clientInfo.DownPayment:N0}";
                 startDate.Text = clientInfo.StartDate.ToShortDateString();
                 endDate.Text = clientInfo.EndDate.ToShortDateString();
+                pymethod.Text = (clientInfo.PaymentMethod == 1) ? "Cash" : (clientInfo.PaymentMethod == 2) ? "E-wallet"
+                            : (clientInfo.PaymentMethod == 3) ? "Banks" : "None";
+                refnum.Text = clientInfo.ReferenceNo;
 
                 if (clientInfo.FullPayment == 1)
                 {
                     totalAmount.Text = $"₱{clientInfo.TotalAmount:N0} (PAID IN FULL)";
+                    fullPaid.Text = "Yes";
                 }
                 else
                 {
+                    fullPaid.Text = "No";
                     totalAmount.Text = $"₱{clientInfo.TotalAmount:N0}";
                 }
 
@@ -88,6 +99,40 @@ namespace c_AccountingCashFlowSystem.Forms
                 this.Close();
                 return;
             }
+        }
+
+        private void close_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void completetransacbtn_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Are you sure you want to complete this transaction?", "Confirm",
+                   MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (DialogResult.Yes == result)
+            {
+                bool transactionCompleted = new ClientDatabase().completeTransac(_clientId, _amount, _referenceNo, _paymentmethod);
+
+                if (transactionCompleted)
+                {
+                    MessageBox.Show("Transaction completed successfully.", "Success",
+                       MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to complete the transaction.", "Error",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                return;
+            }
+            
         }
     }
 }

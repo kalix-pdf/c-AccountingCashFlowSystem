@@ -25,13 +25,18 @@ namespace c_AccountingCashFlowSystem.Forms
             int index = 1;
             List<Client> clients = db.GetCurrentEvents();
 
+            int totalEvents = db.GetCurrentEvents().Count;
+            activeEventsData.Text = totalEvents.ToString();
+
             foreach (Client c in clients)
             {
                 ListViewItem item = new ListViewItem(index.ToString());
+                item.Font = new Font("Segoe UI Semibold", 10, FontStyle.Regular);
+
                 item.Tag = c.ClientId;
                 item.SubItems.Add(c.StartDate.ToShortDateString());
                 item.SubItems.Add(c.FullName);
-                item.SubItems.Add(c.DownPayment.ToString());
+                item.SubItems.Add(" P" + c.TotalAmount.ToString());
                 item.SubItems.Add(c.EndDate.ToShortDateString());
                 item.SubItems.Add("View Info");
 
@@ -39,21 +44,29 @@ namespace c_AccountingCashFlowSystem.Forms
                 index++;
             }
         }
+        public void getTotalIncome()
+        {
+            int totalIncome = db.getTotalIncome();
+            incomeLabelData.Text = "P" + totalIncome.ToString("N0");
+        }
+       
         private void dashboard_Load(object sender, EventArgs e)
         {
             listViewEvents.View = View.Details;
             listViewEvents.FullRowSelect = true;
             listViewEvents.GridLines = true;
 
+            listViewEvents.Font = new Font("Segoe UI Semibold", 11, FontStyle.Bold);
             listViewEvents.Columns.Add("#");
             listViewEvents.Columns.Add("Start Date");
             listViewEvents.Columns.Add("Client Name");
-            listViewEvents.Columns.Add("Paid Amount");
+            listViewEvents.Columns.Add("Total Amount");
             listViewEvents.Columns.Add("End Date");
             listViewEvents.Columns.Add("Action");
 
             AutoSizeListViewColumns(listViewEvents);
             LoadEvents();
+            getTotalIncome();
         }
         private void dashboard_Resize(object sender, EventArgs e)
         {
@@ -77,9 +90,9 @@ namespace c_AccountingCashFlowSystem.Forms
             using (var form = new Forms.addclientbtn())
             {
                  if (form.ShowDialog() == DialogResult.OK)
-                {
+                 {
                     LoadEvents();
-                }
+                 }
             }
         }
 
@@ -98,7 +111,11 @@ namespace c_AccountingCashFlowSystem.Forms
                 int clientId = int.Parse(item.Tag.ToString());
                 using (var form = new Forms.viewinfo(clientId))
                 {
-                    form.ShowDialog();
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadEvents();
+                        getTotalIncome();
+                    }
                 }
             }
         }

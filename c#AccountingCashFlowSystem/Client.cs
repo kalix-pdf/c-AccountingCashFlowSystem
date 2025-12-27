@@ -13,6 +13,8 @@ public class Client
     public int FullPayment { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public string ReferenceNo { get; set; }
+    public int PaymentMethod { get; set; }
     public List<ClientAmenities> ClientAmenities { get; set; }
     public List<ClientRooms> ClientRooms { get; set; }
 }
@@ -42,7 +44,15 @@ public class ClientDatabase
                             MultipleActiveResultSets=False;
                             Encrypt=True;
                             TrustServerCertificate=True;";
-    public int InsertNewClient(string fullName, int totalamount, int downpayment, DateTime startdate, DateTime enddate, List<int> amenityIDS, List<int> roomIDS, int PaidinFull)
+    public string GenerateReferenceNumber()
+    {
+        string datePart = DateTime.Now.ToString("yyyyMMddHHmm");
+        string randomPart = Guid.NewGuid().ToString().Substring(0, 5).ToUpper();
+
+        return $"REF-{datePart}-{randomPart}";
+    }
+
+    public int InsertNewClient(string fullName, int totalamount, int downpayment, DateTime startdate, DateTime enddate, List<int> amenityIDS, List<int> roomIDS, int PaidinFull, int paymentMethod)
     {
         int newClientID = 0;
 
@@ -50,13 +60,14 @@ public class ClientDatabase
         {
             conn.Open();
             SqlTransaction trans = conn.BeginTransaction();
+            string referenceNumber = GenerateReferenceNumber();
 
             try
             {
                 // INSERT client and return new ID
                 string query = @"
-                INSERT INTO dbo.Clients (FullName, TotalAmount, DownPayment, startDate, endDate, isFullPaid)
-                VALUES (@name, @totalamount, @downpayment, @startdate, @enddate, @isFullPaid);
+                INSERT INTO dbo.Clients (FullName, TotalAmount, DownPayment, startDate, endDate, isFullPaid, referenceNo, paymenthMethod)
+                VALUES (@name, @totalamount, @downpayment, @startdate, @enddate, @isFullPaid, @referenceNo, @pymethod);
                 SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn, trans))
@@ -67,6 +78,8 @@ public class ClientDatabase
                     cmd.Parameters.AddWithValue("@startdate", startdate);
                     cmd.Parameters.AddWithValue("@enddate", enddate);
                     cmd.Parameters.AddWithValue("@isFullPaid", PaidinFull);
+                    cmd.Parameters.AddWithValue("@referenceNo", referenceNumber);
+                    cmd.Parameters.AddWithValue("@pymethod", paymentMethod);
 
                     newClientID = Convert.ToInt32(cmd.ExecuteScalar());
                 }
@@ -117,7 +130,7 @@ public class ClientDatabase
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "SELECT * FROM Clients";
+                string query = "SELECT * FROM Clients WHERE status = 0";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
 
@@ -129,7 +142,8 @@ public class ClientDatabase
                         {
                             ClientId = Convert.ToInt32(reader["ClientId"]),
                             FullName = reader["FullName"].ToString(),
-                            DownPayment = Convert.ToInt32(reader["DownPayment"]),
+                            TotalAmount = Convert.ToInt32(reader["TotalAmount"]),
+                            //DownPayment = Convert.ToInt32(reader["DownPayment"]),
                             StartDate = Convert.ToDateTime(reader["StartDate"]),
                             EndDate = Convert.ToDateTime(reader["EndDate"])
                         });
@@ -155,7 +169,7 @@ public class ClientDatabase
             {
                 Client clientInfo = null;
 
-                string CQuery = "SELECT FullName, TotalAmount, isFullPaid, DownPayment, StartDate, EndDate FROM Clients WHERE ClientId = @clientId";
+                string CQuery = "SELECT FullName, TotalAmount, isFullPaid, DownPayment, StartDate, EndDate, referenceNo, paymenthMethod FROM Clients WHERE ClientId = @clientId";
 
                 using (var cmdClient = new SqlCommand(CQuery, conn, trans))
                 {
@@ -173,6 +187,8 @@ public class ClientDatabase
                                 DownPayment = Convert.ToInt32(reader["DownPayment"]),
                                 StartDate = Convert.ToDateTime(reader["StartDate"]),
                                 EndDate = Convert.ToDateTime(reader["EndDate"]),
+                                ReferenceNo = reader["referenceNo"].ToString(),
+                                PaymentMethod = Convert.ToInt32(reader["paymenthMethod"]),
                                 ClientAmenities = new List<ClientAmenities>(),
                                 ClientRooms = new List<ClientRooms>()
                             };
@@ -299,6 +315,71 @@ public class ClientDatabase
             return null;
         }
         return rooms;
+    }
+    public bool completeTransac(int ClientID, int amount, string refnum, int paymentmethod)
+    {
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            conn.Open();
+            SqlTransaction trans = conn.BeginTransaction();
+
+            try
+            {
+                string query = "UPDATE Clients SET status = 1 WHERE ClientId = @clientID";
+
+                string transactionQuery = "INSERT INTO Transactions (ReferenceNo, Amount, TransactionType, PaymentMethod) " +
+                    "VALUES (@refno, @amount, @transacType, @pymethod)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn, trans))
+                {
+                    cmd.Parameters.Add("@clientID", SqlDbType.Int).Value = ClientID;
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlCommand cmd = new SqlCommand(transactionQuery, conn, trans))
+                {
+                    cmd.Parameters.AddWithValue("@refno", refnum);
+                    cmd.Parameters.AddWithValue("@amount", amount);
+                    cmd.Parameters.AddWithValue("@transacType", "Income");
+                    cmd.Parameters.AddWithValue("@pymethod", paymentmethod);
+                    cmd.ExecuteNonQuery();
+                }
+                trans.Commit();
+                return true;
+
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+
+        }
+    }
+
+    public int getTotalIncome()
+    {
+        int totalIncome = 0;
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT SUM(Amount) AS TotalIncome FROM Transactions WHERE TransactionType = 'Income'";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    totalIncome = Convert.ToInt32(result);
+                }
+            }
+            return totalIncome;
+
+        }
+        catch
+        {
+            throw;
+        }
     }
 }
 

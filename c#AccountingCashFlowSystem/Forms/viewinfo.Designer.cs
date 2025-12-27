@@ -36,13 +36,14 @@
             this.totalAmount = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.clientName = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.endDate = new System.Windows.Forms.Label();
             this.startDate = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.fullPaid = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.amenities = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -51,6 +52,9 @@
             this.roomPanel = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.amenitiesPanel = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.pymethod = new System.Windows.Forms.Label();
+            this.refnum = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -99,7 +103,7 @@
             // 
             this.downPayment.AutoSize = true;
             this.downPayment.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.downPayment.Location = new System.Drawing.Point(152, 155);
+            this.downPayment.Location = new System.Drawing.Point(162, 169);
             this.downPayment.Name = "downPayment";
             this.downPayment.Size = new System.Drawing.Size(46, 21);
             this.downPayment.TabIndex = 7;
@@ -109,7 +113,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(19, 155);
+            this.label8.Location = new System.Drawing.Point(19, 165);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(122, 21);
             this.label8.TabIndex = 6;
@@ -119,7 +123,7 @@
             // 
             this.totalAmount.AutoSize = true;
             this.totalAmount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalAmount.Location = new System.Drawing.Point(152, 134);
+            this.totalAmount.Location = new System.Drawing.Point(162, 148);
             this.totalAmount.Name = "totalAmount";
             this.totalAmount.Size = new System.Drawing.Size(46, 21);
             this.totalAmount.TabIndex = 5;
@@ -129,7 +133,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(19, 134);
+            this.label4.Location = new System.Drawing.Point(19, 144);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(109, 21);
             this.label4.TabIndex = 4;
@@ -145,20 +149,10 @@
             this.clientName.TabIndex = 3;
             this.clientName.Text = "Jake Aringo";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(19, 28);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 20);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Client\'s Name";
-            // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.refnum);
             this.panel2.Controls.Add(this.clientName);
-            this.panel2.Controls.Add(this.label3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
@@ -169,7 +163,7 @@
             // 
             this.endDate.AutoSize = true;
             this.endDate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.endDate.Location = new System.Drawing.Point(152, 90);
+            this.endDate.Location = new System.Drawing.Point(162, 99);
             this.endDate.Name = "endDate";
             this.endDate.Size = new System.Drawing.Size(75, 21);
             this.endDate.TabIndex = 8;
@@ -179,7 +173,7 @@
             // 
             this.startDate.AutoSize = true;
             this.startDate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startDate.Location = new System.Drawing.Point(152, 64);
+            this.startDate.Location = new System.Drawing.Point(162, 78);
             this.startDate.Name = "startDate";
             this.startDate.Size = new System.Drawing.Size(85, 21);
             this.startDate.TabIndex = 7;
@@ -189,7 +183,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(19, 90);
+            this.label6.Location = new System.Drawing.Point(19, 99);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 21);
             this.label6.TabIndex = 6;
@@ -199,7 +193,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(19, 64);
+            this.label5.Location = new System.Drawing.Point(19, 78);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 21);
             this.label5.TabIndex = 5;
@@ -208,6 +202,10 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Azure;
+            this.panel3.Controls.Add(this.pymethod);
+            this.panel3.Controls.Add(this.label10);
+            this.panel3.Controls.Add(this.fullPaid);
+            this.panel3.Controls.Add(this.label9);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.totalAmount);
             this.panel3.Controls.Add(this.panel2);
@@ -222,6 +220,26 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(320, 296);
             this.panel3.TabIndex = 2;
+            // 
+            // fullPaid
+            // 
+            this.fullPaid.AutoSize = true;
+            this.fullPaid.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fullPaid.Location = new System.Drawing.Point(175, 213);
+            this.fullPaid.Name = "fullPaid";
+            this.fullPaid.Size = new System.Drawing.Size(33, 21);
+            this.fullPaid.TabIndex = 10;
+            this.fullPaid.Text = "Yes";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(19, 213);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(106, 21);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "Full Payment: ";
             // 
             // amenities
             // 
@@ -259,6 +277,7 @@
             // close
             // 
             this.close.BackColor = System.Drawing.Color.Teal;
+            this.close.Cursor = System.Windows.Forms.Cursors.Hand;
             this.close.Dock = System.Windows.Forms.DockStyle.Right;
             this.close.FlatAppearance.BorderSize = 0;
             this.close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -270,10 +289,12 @@
             this.close.TabIndex = 1;
             this.close.Text = "Close";
             this.close.UseVisualStyleBackColor = false;
+            this.close.Click += new System.EventHandler(this.close_Click);
             // 
             // completetransacbtn
             // 
             this.completetransacbtn.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.completetransacbtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.completetransacbtn.Dock = System.Windows.Forms.DockStyle.Right;
             this.completetransacbtn.FlatAppearance.BorderSize = 0;
             this.completetransacbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -285,6 +306,7 @@
             this.completetransacbtn.TabIndex = 0;
             this.completetransacbtn.Text = "Complete Transaction";
             this.completetransacbtn.UseVisualStyleBackColor = false;
+            this.completetransacbtn.Click += new System.EventHandler(this.completetransacbtn_Click);
             // 
             // roomPanel
             // 
@@ -314,6 +336,36 @@
             this.amenitiesPanel.Size = new System.Drawing.Size(320, 129);
             this.amenitiesPanel.TabIndex = 13;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(19, 234);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(135, 21);
+            this.label10.TabIndex = 11;
+            this.label10.Text = "Payment Method: ";
+            // 
+            // pymethod
+            // 
+            this.pymethod.AutoSize = true;
+            this.pymethod.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pymethod.Location = new System.Drawing.Point(175, 234);
+            this.pymethod.Name = "pymethod";
+            this.pymethod.Size = new System.Drawing.Size(67, 21);
+            this.pymethod.TabIndex = 13;
+            this.pymethod.Text = "E-Wallet";
+            // 
+            // refnum
+            // 
+            this.refnum.AutoSize = true;
+            this.refnum.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.refnum.Location = new System.Drawing.Point(19, 28);
+            this.refnum.Name = "refnum";
+            this.refnum.Size = new System.Drawing.Size(180, 19);
+            this.refnum.TabIndex = 14;
+            this.refnum.Text = "REF-202512271959-DFA08";
+            // 
             // viewinfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -323,7 +375,7 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Name = "viewinfo";
-            this.Text = "viewinfo";
+            this.Text = "g";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -344,7 +396,6 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label clientName;
         private System.Windows.Forms.Panel panel2;
@@ -365,5 +416,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel amenitiesPanel;
         private System.Windows.Forms.Panel roomPanel;
+        private System.Windows.Forms.Label fullPaid;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label refnum;
+        private System.Windows.Forms.Label pymethod;
+        private System.Windows.Forms.Label label10;
     }
 }

@@ -82,15 +82,6 @@ namespace c_AccountingCashFlowSystem
             childForm.BringToFront();
             childForm.Show();
             title.Text = childForm.Text.ToUpper();
-
-            //if (childForm is income incomeForm)
-            //{
-            //    incomeForm.ApplyTheme(color);
-            //}
-            //else if (childForm is dashboard dashboardForm)
-            //{
-            //    dashboardForm.ApplyTheme(color);
-            //}
         }
 
         private void income_Click(object sender, EventArgs e)
@@ -115,6 +106,10 @@ namespace c_AccountingCashFlowSystem
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            dashboard_Click(dashboard, null);
         }
     }
 }

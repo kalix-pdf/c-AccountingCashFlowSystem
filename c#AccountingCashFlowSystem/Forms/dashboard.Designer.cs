@@ -45,7 +45,7 @@
             this.totalExpenseLabel = new System.Windows.Forms.Label();
             this.roundedPanel8 = new RoundedPanel();
             this.totalIncomePanel = new RoundedPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.incomeLabelData = new System.Windows.Forms.Label();
             this.totalIncomeLabel = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
             this.panel1.SuspendLayout();
@@ -136,7 +136,7 @@
             this.activeEventsData.AutoSize = true;
             this.activeEventsData.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.activeEventsData.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.activeEventsData.Location = new System.Drawing.Point(162, 13);
+            this.activeEventsData.Location = new System.Drawing.Point(229, 13);
             this.activeEventsData.Name = "activeEventsData";
             this.activeEventsData.Size = new System.Drawing.Size(22, 25);
             this.activeEventsData.TabIndex = 2;
@@ -149,9 +149,9 @@
             this.currentEventsLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.currentEventsLabel.Location = new System.Drawing.Point(12, 13);
             this.currentEventsLabel.Name = "currentEventsLabel";
-            this.currentEventsLabel.Size = new System.Drawing.Size(144, 25);
+            this.currentEventsLabel.Size = new System.Drawing.Size(200, 25);
             this.currentEventsLabel.TabIndex = 0;
-            this.currentEventsLabel.Text = "Current Events: ";
+            this.currentEventsLabel.Text = "Current Active Events: ";
             // 
             // moneyonHandPanel
             // 
@@ -241,23 +241,23 @@
             // 
             this.totalIncomePanel.BackColor = System.Drawing.Color.MediumVioletRed;
             this.totalIncomePanel.BorderRadius = 20;
-            this.totalIncomePanel.Controls.Add(this.label1);
+            this.totalIncomePanel.Controls.Add(this.incomeLabelData);
             this.totalIncomePanel.Controls.Add(this.totalIncomeLabel);
             this.totalIncomePanel.Location = new System.Drawing.Point(21, 18);
             this.totalIncomePanel.Name = "totalIncomePanel";
             this.totalIncomePanel.Size = new System.Drawing.Size(230, 130);
             this.totalIncomePanel.TabIndex = 1;
             // 
-            // label1
+            // incomeLabelData
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label1.Location = new System.Drawing.Point(12, 74);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 21);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "₱0";
+            this.incomeLabelData.AutoSize = true;
+            this.incomeLabelData.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.incomeLabelData.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.incomeLabelData.Location = new System.Drawing.Point(12, 74);
+            this.incomeLabelData.Name = "incomeLabelData";
+            this.incomeLabelData.Size = new System.Drawing.Size(29, 21);
+            this.incomeLabelData.TabIndex = 1;
+            this.incomeLabelData.Text = "₱0";
             // 
             // totalIncomeLabel
             // 
@@ -324,7 +324,7 @@
         private System.Windows.Forms.Label totalIncomeLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label incomeLabelData;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel4;

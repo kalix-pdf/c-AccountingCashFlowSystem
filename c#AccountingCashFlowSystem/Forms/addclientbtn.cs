@@ -139,6 +139,12 @@ namespace c_AccountingCashFlowSystem.Forms
                 return false;
             }
 
+            if (cashrdbtn.Checked == false && ewalletrdbtn.Checked == false && banksrdbtn.Checked == false)
+            {
+                MessageBox.Show("Please select a payment method.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
             return isValid;
         }
         private void createEventBtn_Click(object sender, EventArgs e)
@@ -153,6 +159,8 @@ namespace c_AccountingCashFlowSystem.Forms
                 int totalAmount = (int)totalAmountInput.Value;
                 var fullPayment = fullPaymentchk.Checked ? 1 : 0;
                 int downPayment = (fullPayment == 1) ? 0 : (int)downPaymentInput.Value;
+
+                int paymentMethod = cashrdbtn.Checked ? 1 : (ewalletrdbtn.Checked ? 2 : 3);
 
                 DateTime startdate = startDate.Value;
                 DateTime enddate = endDate.Value;
@@ -173,7 +181,7 @@ namespace c_AccountingCashFlowSystem.Forms
                     }
                 }
 
-                int success = db.InsertNewClient(inputClientName.Text, totalAmount, downPayment, startdate, enddate, selectedAmenities, selectedRooms, fullPayment);
+                int success = db.InsertNewClient(inputClientName.Text, totalAmount, downPayment, startdate, enddate, selectedAmenities, selectedRooms, fullPayment, paymentMethod);
             
                 if (success > 0)
                 {
@@ -250,6 +258,11 @@ namespace c_AccountingCashFlowSystem.Forms
         private void label8_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cancelbtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
