@@ -144,6 +144,7 @@ public class ClientDatabase
                     {
                         clients.Add(new Client
                         {
+                            ReferenceNo = reader["referenceNo"].ToString(),
                             ClientId = Convert.ToInt32(reader["ClientId"]),
                             FullName = reader["FullName"].ToString(),
                             TotalAmount = Convert.ToInt32(reader["TotalAmount"]),
@@ -374,6 +375,31 @@ public class ClientDatabase
             throw;
         }
     }
-    
+
+    public int getTotalExpenses()
+    {
+        int totalExpenses = 0;
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT SUM(Amount) AS TotalExpenses FROM Transactions WHERE TransactionType = 'Expenses'";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    totalExpenses = Convert.ToInt32(result);
+                }
+            }
+            return totalExpenses;
+
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
 }
 

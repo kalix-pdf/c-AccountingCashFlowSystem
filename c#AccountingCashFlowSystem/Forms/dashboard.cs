@@ -22,7 +22,6 @@ namespace c_AccountingCashFlowSystem.Forms
         public void LoadEvents()
         {
             listViewEvents.Items.Clear();
-            int index = 1;
             List<Client> clients = db.GetCurrentEvents();
 
             int totalEvents = db.GetCurrentEvents().Count;
@@ -30,7 +29,7 @@ namespace c_AccountingCashFlowSystem.Forms
 
             foreach (Client c in clients)
             {
-                ListViewItem item = new ListViewItem(index.ToString());
+                ListViewItem item = new ListViewItem(c.ReferenceNo.ToString());
                 item.Font = new Font("Segoe UI Semibold", 10, FontStyle.Regular);
 
                 item.Tag = c.ClientId;
@@ -41,7 +40,6 @@ namespace c_AccountingCashFlowSystem.Forms
                 item.SubItems.Add("View Info");
 
                 listViewEvents.Items.Add(item);
-                index++;
             }
         }
         public void getTotalIncome()
@@ -52,12 +50,15 @@ namespace c_AccountingCashFlowSystem.Forms
        
         private void dashboard_Load(object sender, EventArgs e)
         {
+            int totalExpenses = db.getTotalExpenses();
+            expenseLabelData.Text = "P" + totalExpenses.ToString("N0");
+
             listViewEvents.View = View.Details;
             listViewEvents.FullRowSelect = true;
             listViewEvents.GridLines = true;
 
             listViewEvents.Font = new Font("Segoe UI Semibold", 11, FontStyle.Bold);
-            listViewEvents.Columns.Add("#");
+            listViewEvents.Columns.Add("Refence No.");
             listViewEvents.Columns.Add("Start Date");
             listViewEvents.Columns.Add("Client Name");
             listViewEvents.Columns.Add("Total Amount");
@@ -65,6 +66,7 @@ namespace c_AccountingCashFlowSystem.Forms
             listViewEvents.Columns.Add("Action");
 
             AutoSizeListViewColumns(listViewEvents);
+
             LoadEvents();
             getTotalIncome();
         }

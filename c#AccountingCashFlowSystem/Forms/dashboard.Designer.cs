@@ -41,7 +41,7 @@
             this.moneyonHandLabel = new System.Windows.Forms.Label();
             this.roundedPanel4 = new RoundedPanel();
             this.totalExpensePanel = new RoundedPanel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.expenseLabelData = new System.Windows.Forms.Label();
             this.totalExpenseLabel = new System.Windows.Forms.Label();
             this.roundedPanel8 = new RoundedPanel();
             this.totalIncomePanel = new RoundedPanel();
@@ -200,23 +200,23 @@
             // 
             this.totalExpensePanel.BackColor = System.Drawing.Color.DarkMagenta;
             this.totalExpensePanel.BorderRadius = 20;
-            this.totalExpensePanel.Controls.Add(this.label2);
+            this.totalExpensePanel.Controls.Add(this.expenseLabelData);
             this.totalExpensePanel.Controls.Add(this.totalExpenseLabel);
             this.totalExpensePanel.Location = new System.Drawing.Point(276, 18);
             this.totalExpensePanel.Name = "totalExpensePanel";
             this.totalExpensePanel.Size = new System.Drawing.Size(230, 130);
             this.totalExpensePanel.TabIndex = 3;
             // 
-            // label2
+            // expenseLabelData
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label2.Location = new System.Drawing.Point(12, 74);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 21);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "₱0";
+            this.expenseLabelData.AutoSize = true;
+            this.expenseLabelData.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.expenseLabelData.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.expenseLabelData.Location = new System.Drawing.Point(12, 74);
+            this.expenseLabelData.Name = "expenseLabelData";
+            this.expenseLabelData.Size = new System.Drawing.Size(29, 21);
+            this.expenseLabelData.TabIndex = 2;
+            this.expenseLabelData.Text = "₱0";
             // 
             // totalExpenseLabel
             // 
@@ -334,7 +334,7 @@
         private System.Windows.Forms.Label totalExpenseLabel;
         private System.Windows.Forms.Label totalIncomeLabel;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label expenseLabelData;
         private System.Windows.Forms.Label incomeLabelData;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;

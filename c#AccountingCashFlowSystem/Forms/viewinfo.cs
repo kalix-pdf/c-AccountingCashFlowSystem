@@ -108,7 +108,7 @@ namespace c_AccountingCashFlowSystem.Forms
 
         private void completetransacbtn_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to complete this transaction?", "Confirm",
+            DialogResult result = MessageBox.Show("Are you sure you want to complete this transaction? It will automatically added to your SALES", "Confirm",
                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (DialogResult.Yes == result)
