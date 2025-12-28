@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -17,6 +16,18 @@ public class Client
     public int PaymentMethod { get; set; }
     public List<ClientAmenities> ClientAmenities { get; set; }
     public List<ClientRooms> ClientRooms { get; set; }
+    public string Connection()
+    {
+        string connectionString = @"Data Source=DESKTOP-4JC0DPF\SQLEXPRESS;
+                            Initial Catalog=master;
+                            Integrated Security=True;
+                            Persist Security Info=False;
+                            Pooling=False;
+                            MultipleActiveResultSets=False;
+                            Encrypt=True;
+                            TrustServerCertificate=True;";
+        return connectionString;
+    }
 }
 public class ClientAmenities
 {
@@ -35,16 +46,9 @@ public class AmenitiesAndRooms
 }
 public class ClientDatabase
 {
-    private readonly string connectionString =
-    @"Data Source=DESKTOP-4JC0DPF\SQLEXPRESS;
-                            Initial Catalog=master;
-                            Integrated Security=True;
-                            Persist Security Info=False;
-                            Pooling=False;
-                            MultipleActiveResultSets=False;
-                            Encrypt=True;
-                            TrustServerCertificate=True;";
-    public string GenerateReferenceNumber()
+    private readonly string connectionString = new Client().Connection();
+
+    public static string GenerateReferenceNumber()
     {
         string datePart = DateTime.Now.ToString("yyyyMMddHHmm");
         string randomPart = Guid.NewGuid().ToString().Substring(0, 5).ToUpper();
@@ -150,13 +154,13 @@ public class ClientDatabase
                     }
                 }
             }
+            return clients;
         }
-        catch (Exception ex)
+        catch 
         {
-            MessageBox.Show(ex.Message);
+            throw;
         }
 
-        return clients;
     }
     public Client GetClient(int clientId)
     {
@@ -316,7 +320,7 @@ public class ClientDatabase
         }
         return rooms;
     }
-    public bool completeTransac(int ClientID, int amount, string refnum, int paymentmethod)
+    public bool completeTransac(int ClientID)
     {
         using (SqlConnection conn = new SqlConnection(connectionString))
         {
@@ -327,23 +331,12 @@ public class ClientDatabase
             {
                 string query = "UPDATE Clients SET status = 1 WHERE ClientId = @clientID";
 
-                string transactionQuery = "INSERT INTO Transactions (ReferenceNo, Amount, TransactionType, PaymentMethod) " +
-                    "VALUES (@refno, @amount, @transacType, @pymethod)";
-
                 using (SqlCommand cmd = new SqlCommand(query, conn, trans))
                 {
                     cmd.Parameters.Add("@clientID", SqlDbType.Int).Value = ClientID;
                     cmd.ExecuteNonQuery();
                 }
-
-                using (SqlCommand cmd = new SqlCommand(transactionQuery, conn, trans))
-                {
-                    cmd.Parameters.AddWithValue("@refno", refnum);
-                    cmd.Parameters.AddWithValue("@amount", amount);
-                    cmd.Parameters.AddWithValue("@transacType", "Income");
-                    cmd.Parameters.AddWithValue("@pymethod", paymentmethod);
-                    cmd.ExecuteNonQuery();
-                }
+                
                 trans.Commit();
                 return true;
 
@@ -381,5 +374,6 @@ public class ClientDatabase
             throw;
         }
     }
+    
 }
 

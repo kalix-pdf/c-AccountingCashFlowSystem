@@ -100,7 +100,7 @@ namespace c_AccountingCashFlowSystem
 
         private void expenses_Click(object sender, EventArgs e)
         {
-            ActivateButton(sender);
+            openChildForm(new Forms.expenses(), sender);
         }
 
         private void label1_Click(object sender, EventArgs e)

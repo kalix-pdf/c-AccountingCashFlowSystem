@@ -15,7 +15,7 @@ namespace c_AccountingCashFlowSystem.Forms
         private readonly int _clientId;
         private int _paymentmethod;
         private string _referenceNo;
-        private int _amount;
+        private decimal _amount;
         public viewinfo(int clientId)
         {
             InitializeComponent();
@@ -113,9 +113,10 @@ namespace c_AccountingCashFlowSystem.Forms
 
             if (DialogResult.Yes == result)
             {
-                bool transactionCompleted = new ClientDatabase().completeTransac(_clientId, _amount, _referenceNo, _paymentmethod);
+                bool transactionCompleted = new ClientDatabase().completeTransac(_clientId);
+                int insertNewTransaction = new IEModel().addNewTransaction(_amount, _paymentmethod, _referenceNo, 1);
 
-                if (transactionCompleted)
+                if (transactionCompleted && insertNewTransaction > 0)
                 {
                     MessageBox.Show("Transaction completed successfully.", "Success",
                        MessageBoxButtons.OK, MessageBoxIcon.Information);

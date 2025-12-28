@@ -53,7 +53,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(215, 514);
+            this.panel1.Size = new System.Drawing.Size(215, 533);
             this.panel1.TabIndex = 0;
             // 
             // reports
@@ -154,7 +154,7 @@
             this.TitleBar.Dock = System.Windows.Forms.DockStyle.Top;
             this.TitleBar.Location = new System.Drawing.Point(215, 0);
             this.TitleBar.Name = "TitleBar";
-            this.TitleBar.Size = new System.Drawing.Size(790, 75);
+            this.TitleBar.Size = new System.Drawing.Size(798, 75);
             this.TitleBar.TabIndex = 1;
             // 
             // title
@@ -163,7 +163,7 @@
             this.title.AutoSize = true;
             this.title.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.title.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.title.Location = new System.Drawing.Point(341, 39);
+            this.title.Location = new System.Drawing.Point(345, 39);
             this.title.Name = "title";
             this.title.Size = new System.Drawing.Size(103, 20);
             this.title.TabIndex = 1;
@@ -176,7 +176,7 @@
             this.header.AutoSize = true;
             this.header.Font = new System.Drawing.Font("Yu Gothic UI Semibold", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.header.ForeColor = System.Drawing.Color.White;
-            this.header.Location = new System.Drawing.Point(222, 11);
+            this.header.Location = new System.Drawing.Point(226, 11);
             this.header.Name = "header";
             this.header.Size = new System.Drawing.Size(361, 28);
             this.header.TabIndex = 0;
@@ -187,14 +187,14 @@
             this.childFormPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.childFormPanel.Location = new System.Drawing.Point(215, 75);
             this.childFormPanel.Name = "childFormPanel";
-            this.childFormPanel.Size = new System.Drawing.Size(790, 439);
+            this.childFormPanel.Size = new System.Drawing.Size(798, 458);
             this.childFormPanel.TabIndex = 2;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1005, 514);
+            this.ClientSize = new System.Drawing.Size(1013, 533);
             this.Controls.Add(this.childFormPanel);
             this.Controls.Add(this.TitleBar);
             this.Controls.Add(this.panel1);

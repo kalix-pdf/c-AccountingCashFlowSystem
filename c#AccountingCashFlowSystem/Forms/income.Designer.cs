@@ -48,6 +48,7 @@
             this.weekIncomeData = new System.Windows.Forms.Label();
             this.weekIncomeLabel = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -153,7 +154,7 @@
             // 
             // yearIncomePanel
             // 
-            this.yearIncomePanel.BackColor = System.Drawing.Color.LightCyan;
+            this.yearIncomePanel.BackColor = System.Drawing.Color.DarkSlateBlue;
             this.yearIncomePanel.BorderRadius = 20;
             this.yearIncomePanel.Controls.Add(this.yearIncomeData);
             this.yearIncomePanel.Controls.Add(this.yearIncomeLabel);
@@ -180,9 +181,9 @@
             this.yearIncomeLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.yearIncomeLabel.Location = new System.Drawing.Point(12, 19);
             this.yearIncomeLabel.Name = "yearIncomeLabel";
-            this.yearIncomeLabel.Size = new System.Drawing.Size(100, 21);
+            this.yearIncomeLabel.Size = new System.Drawing.Size(94, 21);
             this.yearIncomeLabel.TabIndex = 2;
-            this.yearIncomeLabel.Text = "Year Income";
+            this.yearIncomeLabel.Text = "Yearly Sales";
             // 
             // roundedPanel4
             // 
@@ -195,7 +196,7 @@
             // 
             // monthIncomePanel
             // 
-            this.monthIncomePanel.BackColor = System.Drawing.Color.LightCyan;
+            this.monthIncomePanel.BackColor = System.Drawing.Color.DarkOliveGreen;
             this.monthIncomePanel.BorderRadius = 20;
             this.monthIncomePanel.Controls.Add(this.monthIncomeData);
             this.monthIncomePanel.Controls.Add(this.monthIncomeLabel);
@@ -222,9 +223,9 @@
             this.monthIncomeLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.monthIncomeLabel.Location = new System.Drawing.Point(12, 19);
             this.monthIncomeLabel.Name = "monthIncomeLabel";
-            this.monthIncomeLabel.Size = new System.Drawing.Size(161, 21);
+            this.monthIncomeLabel.Size = new System.Drawing.Size(121, 21);
             this.monthIncomeLabel.TabIndex = 1;
-            this.monthIncomeLabel.Text = "This Month\'s Income";
+            this.monthIncomeLabel.Text = "Montly Income";
             // 
             // roundedPanel8
             // 
@@ -237,7 +238,7 @@
             // 
             // weekIncomePanel
             // 
-            this.weekIncomePanel.BackColor = System.Drawing.Color.LightCyan;
+            this.weekIncomePanel.BackColor = System.Drawing.Color.Teal;
             this.weekIncomePanel.BorderRadius = 20;
             this.weekIncomePanel.Controls.Add(this.weekIncomeData);
             this.weekIncomePanel.Controls.Add(this.weekIncomeLabel);
@@ -264,9 +265,9 @@
             this.weekIncomeLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.weekIncomeLabel.Location = new System.Drawing.Point(12, 19);
             this.weekIncomeLabel.Name = "weekIncomeLabel";
-            this.weekIncomeLabel.Size = new System.Drawing.Size(153, 21);
+            this.weekIncomeLabel.Size = new System.Drawing.Size(122, 21);
             this.weekIncomeLabel.TabIndex = 0;
-            this.weekIncomeLabel.Text = "This Week\'s Income";
+            this.weekIncomeLabel.Text = "Weekly Income";
             // 
             // roundedPanel1
             // 
@@ -277,12 +278,21 @@
             this.roundedPanel1.Size = new System.Drawing.Size(230, 130);
             this.roundedPanel1.TabIndex = 5;
             // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.panel5.Location = new System.Drawing.Point(31, 172);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(750, 271);
+            this.panel5.TabIndex = 12;
+            // 
             // income
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 450);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.yearIncomePanel);
             this.Controls.Add(this.roundedPanel4);
             this.Controls.Add(this.monthIncomePanel);
@@ -330,5 +340,6 @@
         private System.Windows.Forms.Label weekIncomeData;
         private System.Windows.Forms.Label weekIncomeLabel;
         private RoundedPanel roundedPanel1;
+        private System.Windows.Forms.Panel panel5;
     }
 }

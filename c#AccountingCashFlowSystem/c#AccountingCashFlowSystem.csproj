@@ -64,6 +64,13 @@
     <Compile Include="Forms\dashboard.Designer.cs">
       <DependentUpon>dashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\expenses.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\expenses.Designer.cs">
+      <DependentUpon>expenses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IEModel.cs" />
     <Compile Include="Forms\income.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +98,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\dashboard.resx">
       <DependentUpon>dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\expenses.resx">
+      <DependentUpon>expenses.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\income.resx">
       <DependentUpon>income.cs</DependentUpon>

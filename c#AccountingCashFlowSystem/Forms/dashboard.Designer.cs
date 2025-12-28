@@ -48,6 +48,7 @@
             this.incomeLabelData = new System.Windows.Forms.Label();
             this.totalIncomeLabel = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -279,12 +280,22 @@
             this.roundedPanel1.Size = new System.Drawing.Size(230, 130);
             this.roundedPanel1.TabIndex = 0;
             // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.panel5.Location = new System.Drawing.Point(31, 172);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(750, 271);
+            this.panel5.TabIndex = 5;
+            this.panel5.Paint += new System.Windows.Forms.PaintEventHandler(this.panel5_Paint);
+            // 
             // dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 450);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.moneyonHandPanel);
             this.Controls.Add(this.roundedPanel4);
             this.Controls.Add(this.totalExpensePanel);
@@ -333,5 +344,6 @@
         private System.Windows.Forms.Button addClientBtn;
         private System.Windows.Forms.Label activeEventsData;
         private System.Windows.Forms.Label currentEventsLabel;
+        private System.Windows.Forms.Panel panel5;
     }
 }
