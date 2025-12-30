@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -17,13 +14,7 @@ namespace c_AccountingCashFlowSystem.Forms
         {
             InitializeComponent();
         }
-        public void ApplyTheme(Color themeColor)
-        {
-            weekIncomePanel.BackColor = themeColor;
-            monthIncomePanel.BackColor = themeColor;
-            yearIncomePanel.BackColor = themeColor;
-        }
-        
+
         private void AutoSizeListViewColumns(ListView lv)
         {
             if (lv.Columns.Count == 0) return;
@@ -36,51 +27,53 @@ namespace c_AccountingCashFlowSystem.Forms
                 column.Width = columnWidth;
             }
         }
-        private void getIncome()
+        private void getmonthlyIncome()
         {
-            int todayIncome = db.getIncomeToday();
-            int weeklyIncome = db.getIncomeWeekly();
-            int monthlyIncome = db.getIncomeMonthly();
-            int yearlyIncome = db.getIncomeYearly();
+            List <RevenueTotal> monthlyRevenues = db.getMonthlyRevenue();
 
-            weekIncomeData.Text = "P" + weeklyIncome.ToString("N0");
-            todayIncomeData.Text = "P" + todayIncome.ToString("N0");
-            monthIncomeData.Text = "P" + monthlyIncome.ToString("N0");
-            yearIncomeData.Text = "P" + yearlyIncome.ToString("N0");
-        }
-        private void load_incomes()
-        {
-            listViewIncome.Items.Clear();
-            List<Income> incomes = db.getIncome();
-
-            foreach (Income income in incomes)
+            foreach (RevenueTotal revenue in monthlyRevenues)
             {
-                ListViewItem item = new ListViewItem(income.CreatedAt.ToShortDateString());
-                item.Font = new Font("Segoe UI Semibold", 10, FontStyle.Regular);
-
-                //item.SubItems.Add(income.CreatedAt.ToShortDateString());
-                item.SubItems.Add("P" + income.Amount.ToString("N0"));
-                item.SubItems.Add(income.IncomeType);
-                item.SubItems.Add(income.referenceNumber);
-
-                listViewIncome.Items.Add(item);
+                monthlyRevenue.Text = "P" + revenue.currentMonthTotal.ToString("N0");
+                percentIncrease.Text = "+" + revenue.percentageChange.ToString("N0") + "% increase";
             }
+            annualRevenue.Text = "P" + db.getAnnualIncome().ToString("N0");
+
+        }
+        private void load_summary_incomes()
+        {
+            var monthlyIncome = db.getIncomeSummaryMonthly(DateTime.Now.Year);
+
+            var item = new ListViewItem(DateTime.Now.Year.ToString());
+
+            for (int month = 1; month <= 12; month++)
+            {
+                monthlyIncome.TryGetValue(month, out decimal value);
+                item.SubItems.Add("P" + value.ToString("N0"));
+            }
+            listViewIncome.Items.Add(item);
         }
         private void income_Load(object sender, EventArgs e)
         {
             listViewIncome.View = View.Details;
             listViewIncome.FullRowSelect = true;
             listViewIncome.GridLines = true;
+            listViewIncome.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+            listViewIncome.Columns.Add("Year");
 
-            listViewIncome.Font = new Font("Segoe UI Semibold", 11, FontStyle.Bold);
-            listViewIncome.Columns.Add("Date");
-            listViewIncome.Columns.Add("Amount");
-            listViewIncome.Columns.Add("Income Type");
-            listViewIncome.Columns.Add("Reference Number");
+            title.Text = "Income Summary - " + DateTime.Now.Year.ToString();
+
+            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+
+            foreach (var month in monthNames)
+            {
+                if (string.IsNullOrEmpty(month)) continue;
+
+                listViewIncome.Columns.Add(month, 90, HorizontalAlignment.Center);
+            }
 
             AutoSizeListViewColumns(listViewIncome);
-            getIncome();
-            load_incomes();
+            getmonthlyIncome();
+            load_summary_incomes();
         }
     }
 }

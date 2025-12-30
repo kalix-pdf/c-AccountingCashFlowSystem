@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
 {
@@ -17,121 +16,102 @@ namespace c_AccountingCashFlowSystem.Forms
         public string CategoryName { get; set; }
         public int categoryID { get; set; }
     }
+    public class RevenueTotal
+    {
+        public decimal currentMonthTotal { get; set; }
+        public decimal percentageChange { get; set; }
+    }
     public class IEModel
     {
         private string connectionString = new Client().Connection();
         private string _TType;
-
-        public int getIncomeToday()
+        public decimal getIncomeToday()
         {
-            int todayIncome = 0;
-
             using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-
-                    string Query = "SELECT " +
-                        "CAST(CreatedAt AS DATE) AS IncomeDate, " +
-                        "SUM(Amount) AS DailyIncome " +
-                        "FROM Transactions " +
-                        "WHERE TransactionType = 'Income' GROUP BY CAST(CreatedAt AS DATE) " +
-                        "ORDER BY IncomeDate DESC; ";
-                    SqlCommand cmd = new SqlCommand(Query, conn);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+            using (SqlCommand cmd = new SqlCommand(@"
+                    SELECT ISNULL(SUM(Amount), 0)
+                    FROM Transactions
+                    WHERE CreatedAt >= CAST(GETDATE() AS DATE)
+                      AND CreatedAt < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))", conn))
                     {
-                        if (reader.Read())
-                        {
-                            DateTime incomeDate = reader.GetDateTime(0);
+                        conn.Open();
+                        return Convert.ToDecimal(cmd.ExecuteScalar());
+                    }   
+        }
+        public Dictionary<int, decimal> getIncomeSummaryMonthly(int year)
+        {
+            var result = new Dictionary<int, decimal>();
 
-                            if (incomeDate.Date == DateTime.Now.Date)
-                            {
-                                object val = reader.GetValue(1);
-                                todayIncome = (val == DBNull.Value) ? 0 : Convert.ToInt32(val);
-                            }
-                        }
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                    SELECT MONTH(CreatedAt) AS Month, SUM(Amount) As TotalIncome 
+                    FROM Transactions WHERE TransactionType = 'Income' AND YEAR(CreatedAt) = 2025 
+                    GROUP BY MONTH(CreatedAt) ORDER BY Month;", conn))
+            {
+                cmd.Parameters.AddWithValue("@year", year);
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int month = reader.GetInt32(0);
+                        decimal total = reader.GetDecimal(1);
+
+                        result[month] = total; 
                     }
-                    return todayIncome;
-                } 
-                catch 
-                {
-                    throw;
                 }
             }
+
+            return result;
         }
-        public int getIncomeWeekly()
+
+        public List<RevenueTotal> getMonthlyRevenue()
         {
-            int weeklyIncome = 0;
+            List<RevenueTotal> revenueTotals = new List<RevenueTotal>();
+            decimal currentTotal = 0;
+            decimal lastMonthTotal = 0;
+            decimal percentage = 0;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT SUM(CASE WHEN YEAR(CreatedAt) = YEAR(GETDATE()) 
+                AND MONTH(CreatedAt) = MONTH(GETDATE()) THEN Amount ELSE 0 END) AS CurrentMonth, 
+                SUM(CASE WHEN YEAR(CreatedAt) = YEAR(DATEADD(MONTH, -1, GETDATE())) 
+                AND MONTH(CreatedAt) = MONTH(DATEADD(MONTH, -1, GETDATE())) 
+                THEN Amount ELSE 0 END) AS LastMonth FROM Transactions", conn))
             {
-                try
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    conn.Open();
-                    string Query = "SELECT DATEPART(YEAR, CreatedAt) AS Year, " +
-                        "DATEPART(WEEK, CreatedAt) AS Week, SUM(Amount) AS WeeklyIncome " +
-                        "FROM Transactions WHERE TransactionType = 'Income' GROUP BY " +
-                        "DATEPART(YEAR, CreatedAt), DATEPART(WEEK, CreatedAt) ORDER BY Year DESC, Week DESC";
-                    SqlCommand cmd = new SqlCommand(Query, conn);
-
-                    object result = cmd.ExecuteScalar();
-                    weeklyIncome = (result == DBNull.Value) ? 0 : Convert.ToInt32(result);
-
-                    return weeklyIncome;
+                    if (reader.Read())
+                    {
+                        currentTotal = reader.GetDecimal(0);
+                        lastMonthTotal = reader.GetDecimal(1);
+                    }
                 }
-                catch
+                if (lastMonthTotal > 0)
                 {
-                    throw;
+                    percentage = ((currentTotal / lastMonthTotal) - 1) * 100;
                 }
+                revenueTotals.Add(new RevenueTotal
+                {
+                    currentMonthTotal = currentTotal,
+                    percentageChange = percentage
+                });
+
+                return revenueTotals;
             }
         }
-        public int getIncomeMonthly()
+        public decimal getAnnualIncome()
         {
-            int monthlyIncome = 0;
             using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT TOP 1 SUM(Amount) FROM Transactions GROUP BY YEAR(CreatedAt) 
+                ORDER BY YEAR(CreatedAt) DESC", conn))
             {
-                try
-                {
-                    conn.Open();
-                    string Query = "SELECT YEAR(CreatedAt) AS Year, MONTH(CreatedAt) AS Month, " +
-                        "SUM(Amount) AS MonthlyIncome FROM Transactions WHERE TransactionType = 'Income' " +
-                        "GROUP BY YEAR(CreatedAt), MONTH(CreatedAt) ORDER BY Year DESC, Month DESC";
-
-                    SqlCommand cmd = new SqlCommand(Query, conn);
-
-                    object result = cmd.ExecuteScalar();
-                    monthlyIncome = (result == DBNull.Value) ? 0 : Convert.ToInt32(result);
-                    return monthlyIncome;
-                }
-                catch
-                {
-                    throw;
-                }
-            }
-        }
-        public int getIncomeYearly()
-        {
-            int yearlyIncome = 0;
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    string Query = "SELECT YEAR(CreatedAt) AS Year, " +
-                        "SUM(Amount) AS YearlyIncome FROM Transactions WHERE TransactionType = 'Income' " +
-                        "GROUP BY YEAR(CreatedAt) ORDER BY Year DESC";
-                    SqlCommand cmd = new SqlCommand(Query, conn);
-
-                    object result = cmd.ExecuteScalar();
-                    yearlyIncome = (result == DBNull.Value) ? 0 : Convert.ToInt32(result);
-                    return yearlyIncome;
-                }
-                catch
-                {
-                    throw;
-                }
+                conn.Open();
+                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
             }
         }
         public List<Income> getIncome()
@@ -173,7 +153,7 @@ namespace c_AccountingCashFlowSystem.Forms
         //expenses
         public List<ExpenseCategory> getExpenseCategories()
         {
-            List <ExpenseCategory> expenseCategories = new List <ExpenseCategory>();
+            List<ExpenseCategory> expenseCategories = new List<ExpenseCategory>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -203,7 +183,7 @@ namespace c_AccountingCashFlowSystem.Forms
             }
         }
 
-        public int addNewTransaction (decimal amount, int paymentmethod, string referenceNumber, int transactionType = 0)
+        public int addNewTransaction(decimal amount, int paymentmethod, string referenceNumber, int transactionType = 0)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -265,6 +245,28 @@ namespace c_AccountingCashFlowSystem.Forms
                     throw;
                 }
             }
+        }
+        public decimal getMonthlyExpenses()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT TOP 1 SUM(Amount) FROM Expenses GROUP BY MONTH(ExpenseDate) 
+                ORDER BY MONTH(ExpenseDate) DESC", conn))
+            {
+                conn.Open();
+                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+            }
+        }
+        public decimal getYearlyExpenses()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT TOP 1 SUM(Amount) FROM Expenses GROUP BY YEAR(ExpenseDate) 
+                ORDER BY YEAR(ExpenseDate) DESC", conn))
+                  {
+                      conn.Open();
+                    return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+                  }
         }
     }
 }

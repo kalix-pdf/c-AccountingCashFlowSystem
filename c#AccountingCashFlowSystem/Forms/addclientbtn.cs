@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -67,13 +61,13 @@ namespace c_AccountingCashFlowSystem.Forms
         }
         private void HighlightControl(Control ctrl)
         {
-            ctrl.BackColor = Color.MistyRose; 
+            ctrl.BackColor = Color.MistyRose;
             ctrl.Focus();
         }
 
         private void ResetControlHighlight(Control ctrl)
         {
-            ctrl.BackColor = SystemColors.Window; 
+            ctrl.BackColor = SystemColors.Window;
         }
         private bool ValidateForm()
         {
@@ -182,10 +176,10 @@ namespace c_AccountingCashFlowSystem.Forms
                 }
 
                 int success = db.InsertNewClient(inputClientName.Text, totalAmount, downPayment, startdate, enddate, selectedAmenities, selectedRooms, fullPayment, paymentMethod);
-            
+
                 if (success > 0)
                 {
-                    MessageBox.Show("Client added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                    MessageBox.Show("Client added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
@@ -208,7 +202,7 @@ namespace c_AccountingCashFlowSystem.Forms
             var amenities = db.getAmenties();
             int startX = 6;
             int startY = 40;
-            int columnWidth = 160; 
+            int columnWidth = 160;
             int rowHeight = 25;
 
             for (int i = 0; i < amenities.Count; i++)
@@ -218,10 +212,10 @@ namespace c_AccountingCashFlowSystem.Forms
 
                 cb.Name = "chkAmenity_" + amenity.amenitiesID;
                 cb.Text = amenity.amenitiesName;
-                cb.Tag = amenity.amenitiesID; 
+                cb.Tag = amenity.amenitiesID;
                 cb.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 cb.AutoSize = true;
-                
+
                 int column = i % 2;
                 int row = i / 2;
 
@@ -235,7 +229,7 @@ namespace c_AccountingCashFlowSystem.Forms
             var rooms = db.getRooms();
             int startX = 6;
             int startY = 40;
-            int columnWidth = 160; 
+            int columnWidth = 160;
             int rowHeight = 25;
 
             for (int i = 0; i < rooms.Count; i++)
@@ -244,10 +238,10 @@ namespace c_AccountingCashFlowSystem.Forms
                 CheckBox cb = new CheckBox();
                 cb.Name = "roomchk_" + room.roomID;
                 cb.Text = room.roomName;
-                cb.Tag = room.roomID; 
+                cb.Tag = room.roomID;
                 cb.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 cb.AutoSize = true;
-                
+
                 int column = i % 2;
                 int row = i / 2;
                 cb.Location = new Point(startX + (column * columnWidth), startY + (row * rowHeight));

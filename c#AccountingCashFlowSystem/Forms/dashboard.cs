@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -47,7 +42,7 @@ namespace c_AccountingCashFlowSystem.Forms
             int totalIncome = db.getTotalIncome();
             incomeLabelData.Text = "P" + totalIncome.ToString("N0");
         }
-       
+
         private void dashboard_Load(object sender, EventArgs e)
         {
             int totalExpenses = db.getTotalExpenses();
@@ -73,7 +68,7 @@ namespace c_AccountingCashFlowSystem.Forms
         private void dashboard_Resize(object sender, EventArgs e)
         {
             AutoSizeListViewColumns(listViewEvents);
-            
+
         }
         private void AutoSizeListViewColumns(ListView lv)
         {
@@ -91,10 +86,10 @@ namespace c_AccountingCashFlowSystem.Forms
         {
             using (var form = new Forms.addclientbtn())
             {
-                 if (form.ShowDialog() == DialogResult.OK)
-                 {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
                     LoadEvents();
-                 }
+                }
             }
         }
 

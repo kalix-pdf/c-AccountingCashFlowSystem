@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -21,7 +17,7 @@ namespace c_AccountingCashFlowSystem.Forms
         {
             InitializeComponent();
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
             bool allSuccess = true;
@@ -65,7 +61,7 @@ namespace c_AccountingCashFlowSystem.Forms
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-                
+
             if (allSuccess)
             {
                 MessageBox.Show(
@@ -92,7 +88,12 @@ namespace c_AccountingCashFlowSystem.Forms
 
             expenseControl.Tag = categoryId;
         }
-
+        private void loadData()
+        {
+            monthExpenseData.Text = "P" + db.getMonthlyExpenses().ToString("N0");
+            yearlyExpenseData.Text = "P" + db.getYearlyExpenses().ToString("N0");
+            totalExpenseData.Text = "P" + new ClientDatabase().getTotalExpenses().ToString("N0");
+        }
         private void categoriesExpenseLoad()
         {
             List<ExpenseCategory> expenseCategories = db.getExpenseCategories();
@@ -105,6 +106,7 @@ namespace c_AccountingCashFlowSystem.Forms
         }
         private void expenses_Load(object sender, EventArgs e)
         {
+            loadData();
             categoriesExpenseLoad();
         }
     }

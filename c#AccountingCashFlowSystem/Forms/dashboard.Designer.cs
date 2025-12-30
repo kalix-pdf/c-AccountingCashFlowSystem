@@ -225,9 +225,9 @@
             this.totalExpenseLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.totalExpenseLabel.Location = new System.Drawing.Point(12, 19);
             this.totalExpenseLabel.Name = "totalExpenseLabel";
-            this.totalExpenseLabel.Size = new System.Drawing.Size(116, 21);
+            this.totalExpenseLabel.Size = new System.Drawing.Size(170, 21);
             this.totalExpenseLabel.TabIndex = 1;
-            this.totalExpenseLabel.Text = "Total Expenses";
+            this.totalExpenseLabel.Text = "Total Expenses (Costs)";
             // 
             // roundedPanel8
             // 
@@ -267,9 +267,9 @@
             this.totalIncomeLabel.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.totalIncomeLabel.Location = new System.Drawing.Point(12, 19);
             this.totalIncomeLabel.Name = "totalIncomeLabel";
-            this.totalIncomeLabel.Size = new System.Drawing.Size(104, 21);
+            this.totalIncomeLabel.Size = new System.Drawing.Size(96, 21);
             this.totalIncomeLabel.TabIndex = 0;
-            this.totalIncomeLabel.Text = "Total Income";
+            this.totalIncomeLabel.Text = "Net Income";
             // 
             // roundedPanel1
             // 

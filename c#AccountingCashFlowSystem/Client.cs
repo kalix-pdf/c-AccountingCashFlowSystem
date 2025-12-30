@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 public class Client
 {
     public int ClientId { get; set; }
@@ -157,7 +156,7 @@ public class ClientDatabase
             }
             return clients;
         }
-        catch 
+        catch
         {
             throw;
         }
@@ -216,12 +215,12 @@ public class ClientDatabase
                     {
                         while (reader.Read())
                         {
-                            if (reader["amenitiesID"] != DBNull.Value) 
-                            { 
-                                clientInfo.ClientAmenities.Add(new ClientAmenities 
-                                { 
-                                    amenitiesName = reader["amenitiesName"].ToString() 
-                                }); 
+                            if (reader["amenitiesID"] != DBNull.Value)
+                            {
+                                clientInfo.ClientAmenities.Add(new ClientAmenities
+                                {
+                                    amenitiesName = reader["amenitiesName"].ToString()
+                                });
                             }
                         }
                     }
@@ -254,7 +253,7 @@ public class ClientDatabase
             }
             catch
             {
-                trans.Rollback(); 
+                trans.Rollback();
                 throw;
             }
         }
@@ -286,7 +285,7 @@ public class ClientDatabase
             }
 
         }
-        catch 
+        catch
         {
             return null;
         }
@@ -337,7 +336,7 @@ public class ClientDatabase
                     cmd.Parameters.Add("@clientID", SqlDbType.Int).Value = ClientID;
                     cmd.ExecuteNonQuery();
                 }
-                
+
                 trans.Commit();
                 return true;
 
