@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -9,105 +14,92 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class expenses : Form
     {
         IEModel db = new IEModel();
-        private int _expensetag1;
-        private int _expensetag2;
-        private int _expensetag3;
-        private int _expensetag4;
+        private int currentYear = DateTime.Now.Year;
+        private string currentMonth = DateTime.Now.ToString("MMM");
         public expenses()
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void AutoSizeListViewColumns(ListView lv)
         {
-            bool allSuccess = true;
+            if (lv.Columns.Count == 0) return;
 
-            var expenses = new List<(int Tag, decimal Value)>
+            int totalWidth = lv.ClientSize.Width;
+            int columnWidth = totalWidth / lv.Columns.Count;
+
+            foreach (ColumnHeader column in lv.Columns)
             {
-                (_expensetag1, expense1.Value),
-                (_expensetag2, expense2.Value),
-                (_expensetag3, expense3.Value),
-                (_expensetag4, expense4.Value),
+                column.Width = columnWidth;
             }
-            .Where(a => a.Tag > 0 && a.Value > 0)
-            .ToList();
+        }
+        private void load_summary_expenses_listView()
+        {
+            decimal[] columnTotals = new decimal[12];
+            var monthlyIncome = db.getExpensesSumarryMonth(currentYear);
+            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
 
-            if (!expenses.Any())
+            for (int monthIndex = 1; monthIndex <= 12; monthIndex++)
             {
-                MessageBox.Show("Please enter at least one expense.",
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                string monthName = monthNames[monthIndex - 1];
+                if (string.IsNullOrEmpty(monthName)) continue;
 
-            decimal totalAmount = expenses.Sum(a => a.Value);
-            string referenceNumber = ClientDatabase.GenerateReferenceNumber();
+                ListViewItem item = new ListViewItem(monthName);
+                listViewExpensesSumarry.Items.Add(item);
 
-            int TransactionID = db.addNewTransaction(totalAmount, 0, referenceNumber);
-
-            if (TransactionID > 0)
-            {
-                foreach (var expense in expenses)
+                for (int i = 1; i <= 12; i++)
                 {
-                    if (!db.addExpense(expense.Tag, expense.Value, TransactionID))
-                    {
-                        allSuccess = false;
-                        break;
-                    }
+                    monthlyIncome.TryGetValue(i, out decimal value);
+                    columnTotals[i - 1] += value;
+                    item.SubItems.Add("P" + value.ToString("N0"));
                 }
             }
-            else
+
+            ListViewItem totalItem = new ListViewItem("Total");
+
+            decimal grandTotal = 0;
+
+            for (int i = 0; i < 12; i++)
             {
-                MessageBox.Show("Something went wrong :( please contact the developer",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                grandTotal += columnTotals[i];
+                totalItem.SubItems.Add("P" + columnTotals[i].ToString("N0"));
             }
 
-            if (allSuccess)
-            {
-                MessageBox.Show(
-                    allSuccess ? "Expenses added successfully." : "Failed to add expenses.",
-                    allSuccess ? "Success" : "Error",
-                    MessageBoxButtons.OK,
-                    allSuccess ? MessageBoxIcon.Information : MessageBoxIcon.Error
-                );
-                expense1.Value = 0;
-                expense2.Value = 0;
-                expense3.Value = 0;
-                expense4.Value = 0;
-            }
-
-        }
-        private void BindExpenseCategory(Dictionary<string, int> lookup, string categoryName, Label label, Control expenseControl, out int categoryId)
-        {
-            label.Text = categoryName;
-
-            if (!lookup.TryGetValue(categoryName, out categoryId))
-            {
-                throw new Exception($"Expense category '{categoryName}' not found in database.");
-            }
-
-            expenseControl.Tag = categoryId;
-        }
-        private void loadData()
-        {
-            monthExpenseData.Text = "P" + db.getMonthlyExpenses().ToString("N0");
-            yearlyExpenseData.Text = "P" + db.getYearlyExpenses().ToString("N0");
-            totalExpenseData.Text = "P" + new ClientDatabase().getTotalExpenses().ToString("N0");
-        }
-        private void categoriesExpenseLoad()
-        {
-            List<ExpenseCategory> expenseCategories = db.getExpenseCategories();
-            var categoryLookup = expenseCategories.ToDictionary(c => c.CategoryName, c => c.categoryID);
-
-            BindExpenseCategory(categoryLookup, "Salaries", salaryLabel, expense1, out _expensetag1);
-            BindExpenseCategory(categoryLookup, "Maintenance", maintenanceLabel, expense2, out _expensetag2);
-            BindExpenseCategory(categoryLookup, "Utilities", utilityLabel, expense3, out _expensetag3);
-            BindExpenseCategory(categoryLookup, "Other", otherLabel, expense4, out _expensetag4);
+            listViewExpensesSumarry.Items.Add(totalItem);
         }
         private void expenses_Load(object sender, EventArgs e)
         {
-            loadData();
-            categoriesExpenseLoad();
+            listViewExpensesSumarry.View = View.Details;
+            listViewExpensesSumarry.FullRowSelect = true;
+            listViewExpensesSumarry.GridLines = true;
+            listViewExpensesSumarry.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+            listViewExpensesSumarry.Columns.Add("Month");
+            listViewExpensesSumarry.Columns.Add("Amount (P)");
+
+            listViewOperational.View = View.Details;
+            listViewOperational.FullRowSelect = true;
+            listViewOperational.GridLines = true;
+            listViewOperational.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+            listViewOperational.Columns.Add("Expenses");
+            listViewOperational.Columns.Add("Amount (P)");
+
+            //List<string> expenses = new List<string> {"Marketing", "License and Permit", "Food and Beverages",
+            //                    "Repairs and Maintenance", "Utilities", "Salaries", "Internet/POS", "Transportation Cost",
+            //                    "Legal Fees", "Miscellaneous", "Office Supplies", "Taxes", "Bank Charges", "Loan Interest"};
+
+
+
+            AutoSizeListViewColumns(listViewOperational);
+            AutoSizeListViewColumns(listViewExpensesSumarry);
+
+            //load_summary_expenses_listView();
+        }
+
+        private void addExpensesBtn_Click(object sender, EventArgs e)
+        {
+            using (var form = new Forms.addExpenses())
+            {
+                form.ShowDialog();
+            }
         }
     }
 }

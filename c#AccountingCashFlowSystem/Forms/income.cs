@@ -10,6 +10,8 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class income : Form
     {
         IEModel db = new IEModel();
+        private int currentYear = DateTime.Now.Year;
+        private string currentMonth = DateTime.Now.ToString("MMM");
         public income()
         {
             InitializeComponent();
@@ -29,28 +31,63 @@ namespace c_AccountingCashFlowSystem.Forms
         }
         private void getmonthlyIncome()
         {
-            List <RevenueTotal> monthlyRevenues = db.getMonthlyRevenue();
+            List<RevenueTotal> monthlyRevenues = db.getMonthlyRevenue();
 
             foreach (RevenueTotal revenue in monthlyRevenues)
             {
                 monthlyRevenue.Text = "P" + revenue.currentMonthTotal.ToString("N0");
-                percentIncrease.Text = "+" + revenue.percentageChange.ToString("N0") + "% increase";
+                if (revenue.percentageChange > 0)
+                {
+                    percentIncrease.Text = "+" + revenue.percentageChange.ToString("N0") + "% increase";
+                }
+                else
+                {
+                    percentIncrease.Text = revenue.percentageChange.ToString("N0") + "% decrease";
+                }
             }
-            annualRevenue.Text = "P" + db.getAnnualIncome().ToString("N0");
 
+        }
+        private void load_data()
+        {
+            decimal currentTotalRevenue = db.getCurrentTotalRevenue(currentYear);
+
+            currentRevenue.Text = "P" + currentTotalRevenue.ToString();
+            asOfTotalRev.Text = "As of " + currentMonth + " " + currentYear;
         }
         private void load_summary_incomes()
         {
-            var monthlyIncome = db.getIncomeSummaryMonthly(DateTime.Now.Year);
+            decimal[] columnTotals = new decimal[12];
+            var monthlyIncome = db.getIncomeSummaryMonthly(currentYear);
+            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
 
-            var item = new ListViewItem(DateTime.Now.Year.ToString());
-
-            for (int month = 1; month <= 12; month++)
+            for (int monthIndex = 1; monthIndex <= 12; monthIndex++)
             {
-                monthlyIncome.TryGetValue(month, out decimal value);
-                item.SubItems.Add("P" + value.ToString("N0"));
+                string monthName = monthNames[monthIndex - 1];
+                if (string.IsNullOrEmpty(monthName)) continue;
+
+                ListViewItem item = new ListViewItem(monthName);
+                listViewIncome.Items.Add(item);
+
+                for (int i = 1; i <= 12; i++)
+                {
+                    monthlyIncome.TryGetValue(i, out decimal value);
+                    columnTotals[i - 1] += value;
+                    item.SubItems.Add("P" + value.ToString("N0"));
+                }
             }
-            listViewIncome.Items.Add(item);
+
+            ListViewItem totalItem = new ListViewItem("Total");
+
+            decimal grandTotal = 0;
+
+            for (int i = 0; i < 12; i++)
+            {
+                grandTotal += columnTotals[i];
+                totalItem.SubItems.Add("P" + columnTotals[i].ToString("N0"));
+            }
+
+            listViewIncome.Items.Add(totalItem);
+
         }
         private void income_Load(object sender, EventArgs e)
         {
@@ -58,22 +95,20 @@ namespace c_AccountingCashFlowSystem.Forms
             listViewIncome.FullRowSelect = true;
             listViewIncome.GridLines = true;
             listViewIncome.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
-            listViewIncome.Columns.Add("Year");
+            listViewIncome.Columns.Add("Month");
+            listViewIncome.Columns.Add("Amount (P)");
 
-            title.Text = "Income Summary - " + DateTime.Now.Year.ToString();
-
-            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
-
-            foreach (var month in monthNames)
-            {
-                if (string.IsNullOrEmpty(month)) continue;
-
-                listViewIncome.Columns.Add(month, 90, HorizontalAlignment.Center);
-            }
+            title.Text = "Income Summary - " + currentYear;
 
             AutoSizeListViewColumns(listViewIncome);
             getmonthlyIncome();
             load_summary_incomes();
+            load_data();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
