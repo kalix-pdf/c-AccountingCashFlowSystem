@@ -38,7 +38,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.roundedPanel5 = new RoundedPanel();
             this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.roundedPanel6 = new RoundedPanel();
             this.roundedPanel2 = new RoundedPanel();
@@ -63,6 +62,9 @@
             this.monthIncomeLabel = new System.Windows.Forms.Label();
             this.roundedPanel8 = new RoundedPanel();
             this.weekIncomePanel = new RoundedPanel();
+            this.month = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.checkExpenseLabel = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.asOfLabel = new System.Windows.Forms.Label();
             this.yearLabel = new System.Windows.Forms.Label();
@@ -71,8 +73,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.totalSalesData = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -171,11 +171,10 @@
             this.roundedPanel5.BackColor = System.Drawing.Color.PaleTurquoise;
             this.roundedPanel5.BorderRadius = 20;
             this.roundedPanel5.Controls.Add(this.label14);
-            this.roundedPanel5.Controls.Add(this.label15);
             this.roundedPanel5.Controls.Add(this.label16);
-            this.roundedPanel5.Location = new System.Drawing.Point(540, 351);
+            this.roundedPanel5.Location = new System.Drawing.Point(540, 373);
             this.roundedPanel5.Name = "roundedPanel5";
-            this.roundedPanel5.Size = new System.Drawing.Size(237, 81);
+            this.roundedPanel5.Size = new System.Drawing.Size(237, 59);
             this.roundedPanel5.TabIndex = 11;
             // 
             // label14
@@ -185,20 +184,8 @@
             this.label14.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label14.Location = new System.Drawing.Point(66, 41);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(112, 19);
+            this.label14.Size = new System.Drawing.Size(0, 19);
             this.label14.TabIndex = 4;
-            this.label14.Text = "As of Jan. (2026)";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label15.Location = new System.Drawing.Point(13, 38);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(47, 21);
-            this.label15.TabIndex = 3;
-            this.label15.Text = "₱100";
             // 
             // label16
             // 
@@ -215,9 +202,9 @@
             // 
             this.roundedPanel6.BackColor = System.Drawing.Color.DarkSlateGray;
             this.roundedPanel6.BorderRadius = 20;
-            this.roundedPanel6.Location = new System.Drawing.Point(549, 358);
+            this.roundedPanel6.Location = new System.Drawing.Point(549, 380);
             this.roundedPanel6.Name = "roundedPanel6";
-            this.roundedPanel6.Size = new System.Drawing.Size(237, 81);
+            this.roundedPanel6.Size = new System.Drawing.Size(237, 59);
             this.roundedPanel6.TabIndex = 10;
             // 
             // roundedPanel2
@@ -459,8 +446,9 @@
             // 
             this.weekIncomePanel.BackColor = System.Drawing.Color.Teal;
             this.weekIncomePanel.BorderRadius = 20;
+            this.weekIncomePanel.Controls.Add(this.month);
             this.weekIncomePanel.Controls.Add(this.label11);
-            this.weekIncomePanel.Controls.Add(this.label10);
+            this.weekIncomePanel.Controls.Add(this.checkExpenseLabel);
             this.weekIncomePanel.Controls.Add(this.label17);
             this.weekIncomePanel.Controls.Add(this.asOfLabel);
             this.weekIncomePanel.Controls.Add(this.yearLabel);
@@ -470,8 +458,44 @@
             this.weekIncomePanel.Controls.Add(this.totalSalesData);
             this.weekIncomePanel.Location = new System.Drawing.Point(540, 113);
             this.weekIncomePanel.Name = "weekIncomePanel";
-            this.weekIncomePanel.Size = new System.Drawing.Size(235, 227);
+            this.weekIncomePanel.Size = new System.Drawing.Size(235, 242);
             this.weekIncomePanel.TabIndex = 6;
+            // 
+            // month
+            // 
+            this.month.AutoSize = true;
+            this.month.BackColor = System.Drawing.Color.Transparent;
+            this.month.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.month.ForeColor = System.Drawing.Color.Yellow;
+            this.month.Location = new System.Drawing.Point(130, 208);
+            this.month.Name = "month";
+            this.month.Size = new System.Drawing.Size(33, 19);
+            this.month.TabIndex = 13;
+            this.month.Text = "Jan.";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.Color.Transparent;
+            this.label11.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.Yellow;
+            this.label11.Location = new System.Drawing.Point(14, 208);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(114, 19);
+            this.label11.TabIndex = 12;
+            this.label11.Text = "for this month of";
+            // 
+            // checkExpenseLabel
+            // 
+            this.checkExpenseLabel.AutoSize = true;
+            this.checkExpenseLabel.BackColor = System.Drawing.Color.Transparent;
+            this.checkExpenseLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkExpenseLabel.ForeColor = System.Drawing.Color.Yellow;
+            this.checkExpenseLabel.Location = new System.Drawing.Point(14, 189);
+            this.checkExpenseLabel.Name = "checkExpenseLabel";
+            this.checkExpenseLabel.Size = new System.Drawing.Size(174, 19);
+            this.checkExpenseLabel.TabIndex = 11;
+            this.checkExpenseLabel.Text = "Expenses not yet deducted";
             // 
             // label17
             // 
@@ -556,32 +580,8 @@
             this.roundedPanel1.BorderRadius = 20;
             this.roundedPanel1.Location = new System.Drawing.Point(549, 120);
             this.roundedPanel1.Name = "roundedPanel1";
-            this.roundedPanel1.Size = new System.Drawing.Size(235, 227);
+            this.roundedPanel1.Size = new System.Drawing.Size(235, 242);
             this.roundedPanel1.TabIndex = 5;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.BackColor = System.Drawing.Color.Transparent;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.Color.Yellow;
-            this.label10.Location = new System.Drawing.Point(14, 178);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(173, 19);
-            this.label10.TabIndex = 11;
-            this.label10.Text = "Expenses not yet deducted";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.BackColor = System.Drawing.Color.Transparent;
-            this.label11.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.Color.Yellow;
-            this.label11.Location = new System.Drawing.Point(14, 197);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(142, 19);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "for this month of Jan.";
             // 
             // income
             // 
@@ -663,11 +663,11 @@
         private System.Windows.Forms.Label label13;
         private RoundedPanel roundedPanel5;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private RoundedPanel roundedPanel6;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label checkExpenseLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label month;
     }
 }

@@ -66,5 +66,32 @@ namespace c_AccountingCashFlowSystem.Forms
                 this.Close();
             }
         }
+
+        private void addExpenses_Load(object sender, EventArgs e)
+        {
+            decimal checkExpense = db.checkExpenseThisMonth();
+            List<ExpenseCategory> expenses = db.getExpenses();
+
+            if (checkExpense > 0)
+            {
+                MessageBox.Show("You have already added your expenses for this month, You are only allowed to edit the existing expenses",
+                    "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                foreach (var nud in operationalPanel.Controls.OfType<NumericUpDown>()
+                    .Concat(regulatoryPanel.Controls.OfType<NumericUpDown>()))
+                {
+                    if (!int.TryParse(nud.Tag.ToString(), out int tagId))
+                        continue;
+
+                    foreach (var expense in expenses)
+                    {
+                        if (tagId == expense.categoryId)
+                        {
+                            nud.Value = expense.amount;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

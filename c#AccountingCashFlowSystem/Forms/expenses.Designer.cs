@@ -35,7 +35,7 @@
             this.roundedPanel2 = new RoundedPanel();
             this.yearIncomePanel = new RoundedPanel();
             this.asOfNowTotalExpense = new System.Windows.Forms.Label();
-            this.annualRevenue = new System.Windows.Forms.Label();
+            this.annualExpenses = new System.Windows.Forms.Label();
             this.yearIncomeLabel = new System.Windows.Forms.Label();
             this.roundedPanel4 = new RoundedPanel();
             this.monthIncomePanel = new RoundedPanel();
@@ -128,7 +128,7 @@
             this.yearIncomePanel.BackColor = System.Drawing.Color.PaleTurquoise;
             this.yearIncomePanel.BorderRadius = 20;
             this.yearIncomePanel.Controls.Add(this.asOfNowTotalExpense);
-            this.yearIncomePanel.Controls.Add(this.annualRevenue);
+            this.yearIncomePanel.Controls.Add(this.annualExpenses);
             this.yearIncomePanel.Controls.Add(this.yearIncomeLabel);
             this.yearIncomePanel.Location = new System.Drawing.Point(12, 12);
             this.yearIncomePanel.Name = "yearIncomePanel";
@@ -146,16 +146,16 @@
             this.asOfNowTotalExpense.TabIndex = 4;
             this.asOfNowTotalExpense.Text = "As of Jan. (2026)";
             // 
-            // annualRevenue
+            // annualExpenses
             // 
-            this.annualRevenue.AutoSize = true;
-            this.annualRevenue.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.annualRevenue.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.annualRevenue.Location = new System.Drawing.Point(134, 11);
-            this.annualRevenue.Name = "annualRevenue";
-            this.annualRevenue.Size = new System.Drawing.Size(47, 21);
-            this.annualRevenue.TabIndex = 3;
-            this.annualRevenue.Text = "₱100";
+            this.annualExpenses.AutoSize = true;
+            this.annualExpenses.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.annualExpenses.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.annualExpenses.Location = new System.Drawing.Point(134, 11);
+            this.annualExpenses.Name = "annualExpenses";
+            this.annualExpenses.Size = new System.Drawing.Size(47, 21);
+            this.annualExpenses.TabIndex = 3;
+            this.annualExpenses.Text = "₱100";
             // 
             // yearIncomeLabel
             // 
@@ -436,7 +436,7 @@
 
         private RoundedPanel yearIncomePanel;
         private System.Windows.Forms.Label asOfNowTotalExpense;
-        private System.Windows.Forms.Label annualRevenue;
+        private System.Windows.Forms.Label annualExpenses;
         private System.Windows.Forms.Label yearIncomeLabel;
         private RoundedPanel roundedPanel4;
         private RoundedPanel monthIncomePanel;

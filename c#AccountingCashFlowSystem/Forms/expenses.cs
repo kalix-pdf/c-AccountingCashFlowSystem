@@ -29,7 +29,7 @@ namespace c_AccountingCashFlowSystem.Forms
         {
             decimal currentTotalExpenses = db.getCurrentTotalRevenueAndExpenses("Expenses");
         
-            annualRevenue.Text = currentTotalExpenses.ToString();
+            annualExpenses.Text = currentTotalExpenses.ToString();
             asOfNowTotalExpense.Text = "As of " + db.currentMonth + " " + db.currentYear;
 
         }

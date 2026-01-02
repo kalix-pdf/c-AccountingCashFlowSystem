@@ -13,6 +13,7 @@ namespace c_AccountingCashFlowSystem.Forms
     {
         public string CategoryName { get; set; }
         public int amount { get; set; }
+        public int categoryId { get; set; }
     }
     public class RevenueTotal
     {
@@ -135,8 +136,7 @@ namespace c_AccountingCashFlowSystem.Forms
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(
                 @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE YEAR(CreatedAt) = @year 
-                AND TransactionType = @type
-                GROUP BY YEAR(CreatedAt) ORDER BY YEAR(CreatedAt) DESC", conn))
+                AND TransactionType = @type", conn))
             {
                 cmd.Parameters.AddWithValue("@year", currentYear);
                 cmd.Parameters.AddWithValue("@type", type);
@@ -181,16 +181,41 @@ namespace c_AccountingCashFlowSystem.Forms
         }
         public decimal getTotalNetIncome()
         {
+            decimal income = 0;
+            decimal expenses = 0;
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(
-                @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE TransactionType = 'Income' GROUP BY YEAR(ExpenseDate) 
-                ORDER BY YEAR(ExpenseDate) DESC", conn))
+                @"SELECT SUM(CASE WHEN TransactionType = 'Income' THEN Amount ELSE 0 END) AS totalIncome, 
+                SUM(CASE WHEN TransactionType = 'Expenses' THEN Amount ELSE 0 END) FROM Transactions", conn))
             {
                 conn.Open();
-                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        income = reader.IsDBNull(0) ? 0 : reader.GetDecimal(0);
+                        expenses = reader.IsDBNull(1) ? 0 : reader.GetDecimal(1);
+                    }
+                }
             }
+
+            return (income - expenses);
         }
         //expenses
+        public decimal checkExpenseThisMonth(string type = "Expenses")
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT ISNULL(SUM(Amount), 0) FROM Transactions WHERE YEAR(CreatedAt) = @year 
+                AND TransactionType = @type AND MONTH(CreatedAt) = MONTH(GETDATE());", conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@year", currentYear);
+                cmd.Parameters.AddWithValue("@type", type);
+                return Convert.ToDecimal(cmd.ExecuteScalar());
+            }
+        }
 
         public bool addExpense(List<expenseItem> expenses, int transactionID)
         {
@@ -233,7 +258,7 @@ namespace c_AccountingCashFlowSystem.Forms
                 try
                 {
                     string Query = @"DECLARE @currentMonth INT = MONTH(GETDATE());
-                        SELECT e.amount, ec.categoryName FROM expenses AS e 
+                        SELECT e.amount, ec.categoryName, ec.categoryID FROM expenses AS e 
                         LEFT JOIN expenseCategories AS ec ON e.categoryID = ec.categoryID WHERE MONTH(expenseDate) = @currentMonth";
                     using (SqlCommand cmd = new SqlCommand(Query, conn))
                     {
@@ -246,6 +271,7 @@ namespace c_AccountingCashFlowSystem.Forms
                                 {
                                     amount = Convert.ToInt32(reader["amount"]),
                                     CategoryName = reader["categoryName"].ToString(),
+                                    categoryId = Convert.ToInt32(reader["categoryID"])
                                 });
                             }
                         }
@@ -258,16 +284,6 @@ namespace c_AccountingCashFlowSystem.Forms
                 }
             }
         }
-        public decimal getYearlyExpenses()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(
-                @"SELECT TOP 1 SUM(Amount) FROM Expenses GROUP BY YEAR(ExpenseDate) 
-                ORDER BY YEAR(ExpenseDate) DESC", conn))
-                  {
-                    conn.Open();
-                    return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
-                  }
-        }
+        
     }
 }

@@ -30,6 +30,13 @@ namespace c_AccountingCashFlowSystem.Forms
         private void getmonthlyIncome()
         {
             List<RevenueTotal> monthlyRevenues = db.getMonthlyRevenue();
+            decimal result = db.checkExpenseThisMonth();
+
+            if (result > 0)
+            {
+                checkExpenseLabel.Text = "P" + db.checkExpenseThisMonth().ToString() + " of expense was deducted";
+                month.Text = db.currentMonth;
+            }
 
             foreach (RevenueTotal revenue in monthlyRevenues)
             {
@@ -47,6 +54,7 @@ namespace c_AccountingCashFlowSystem.Forms
                     percentIncrease.Text = "0% Changes";
                 }
             }
+            
 
         }
         private void load_data()

@@ -589,6 +589,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "addExpenses";
             this.Text = "expenses";
+            this.Load += new System.EventHandler(this.addExpenses_Load);
             this.panel1.ResumeLayout(false);
             this.panel15.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
