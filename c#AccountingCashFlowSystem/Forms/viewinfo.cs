@@ -108,7 +108,7 @@ namespace c_AccountingCashFlowSystem.Forms
             if (DialogResult.Yes == result)
             {
                 bool transactionCompleted = new ClientDatabase().completeTransac(_clientId);
-                int insertNewTransaction = new IEModel().addNewTransaction(_amount, _paymentmethod, _referenceNo, 1);
+                int insertNewTransaction = new IEModel().addNewTransaction(_amount, _referenceNo, _paymentmethod, 1);
 
                 if (transactionCompleted && insertNewTransaction > 0)
                 {

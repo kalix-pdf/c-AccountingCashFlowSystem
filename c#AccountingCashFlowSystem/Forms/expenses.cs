@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -14,8 +9,6 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class expenses : Form
     {
         IEModel db = new IEModel();
-        private int currentYear = DateTime.Now.Year;
-        private string currentMonth = DateTime.Now.ToString("MMM");
         public expenses()
         {
             InitializeComponent();
@@ -32,73 +25,85 @@ namespace c_AccountingCashFlowSystem.Forms
                 column.Width = columnWidth;
             }
         }
-        private void load_summary_expenses_listView()
+        private void load_data()
         {
-            decimal[] columnTotals = new decimal[12];
-            var monthlyIncome = db.getExpensesSumarryMonth(currentYear);
-            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+            decimal currentTotalExpenses = db.getCurrentTotalRevenueAndExpenses("Expenses");
+        
+            annualRevenue.Text = currentTotalExpenses.ToString();
+            asOfNowTotalExpense.Text = "As of " + db.currentMonth + " " + db.currentYear;
 
-            for (int monthIndex = 1; monthIndex <= 12; monthIndex++)
+        }
+        private void load_listView_data()
+        {
+            List<ExpenseCategory> expenses = db.getExpenses();
+
+            foreach (var expense in expenses)
             {
-                string monthName = monthNames[monthIndex - 1];
-                if (string.IsNullOrEmpty(monthName)) continue;
+                ListViewItem item = new ListViewItem(expense.CategoryName.ToString());
+                item.SubItems.Add("P" + expense.amount.ToString());
 
-                ListViewItem item = new ListViewItem(monthName);
-                listViewExpensesSumarry.Items.Add(item);
-
-                for (int i = 1; i <= 12; i++)
-                {
-                    monthlyIncome.TryGetValue(i, out decimal value);
-                    columnTotals[i - 1] += value;
-                    item.SubItems.Add("P" + value.ToString("N0"));
-                }
+                listViewOperational.Items.Add(item);
             }
 
-            ListViewItem totalItem = new ListViewItem("Total");
+            var monthlyExpenses = db.getIncomeAndExpensesSummaryMonthly("Expenses");
+            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
 
             decimal grandTotal = 0;
 
-            for (int i = 0; i < 12; i++)
+            for (int month = 1; month <= 12; month++)
             {
-                grandTotal += columnTotals[i];
-                totalItem.SubItems.Add("P" + columnTotals[i].ToString("N0"));
+                string monthName = monthNames[month - 1];
+                if (string.IsNullOrEmpty(monthName)) continue;
+
+                monthlyExpenses.TryGetValue(month, out decimal value);
+
+                ListViewItem item = new ListViewItem(monthName);
+                item.SubItems.Add("P" + value.ToString("N0"));
+
+                listViewExpensesSumarry.Items.Add(item);
+
+                grandTotal += value;
             }
 
+            ListViewItem totalItem = new ListViewItem("Total");
+            totalItem.SubItems.Add("P" + grandTotal.ToString("N0"));
+
             listViewExpensesSumarry.Items.Add(totalItem);
+            
         }
         private void expenses_Load(object sender, EventArgs e)
         {
+            Font font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+
             listViewExpensesSumarry.View = View.Details;
             listViewExpensesSumarry.FullRowSelect = true;
             listViewExpensesSumarry.GridLines = true;
-            listViewExpensesSumarry.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+            listViewExpensesSumarry.Font = font;
             listViewExpensesSumarry.Columns.Add("Month");
             listViewExpensesSumarry.Columns.Add("Amount (P)");
 
             listViewOperational.View = View.Details;
             listViewOperational.FullRowSelect = true;
             listViewOperational.GridLines = true;
-            listViewOperational.Font = new Font("Segoe UI Semibold", 10, FontStyle.Bold);
+            listViewOperational.Font = font;
             listViewOperational.Columns.Add("Expenses");
             listViewOperational.Columns.Add("Amount (P)");
-
-            //List<string> expenses = new List<string> {"Marketing", "License and Permit", "Food and Beverages",
-            //                    "Repairs and Maintenance", "Utilities", "Salaries", "Internet/POS", "Transportation Cost",
-            //                    "Legal Fees", "Miscellaneous", "Office Supplies", "Taxes", "Bank Charges", "Loan Interest"};
-
-
 
             AutoSizeListViewColumns(listViewOperational);
             AutoSizeListViewColumns(listViewExpensesSumarry);
 
-            //load_summary_expenses_listView();
+            load_listView_data();
+            load_data();
         }
 
         private void addExpensesBtn_Click(object sender, EventArgs e)
         {
             using (var form = new Forms.addExpenses())
             {
-                form.ShowDialog();
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    load_listView_data();
+                }
             }
         }
     }

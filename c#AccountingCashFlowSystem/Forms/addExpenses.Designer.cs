@@ -33,9 +33,14 @@
             this.submitBtn = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.regulatoryPanel = new System.Windows.Forms.Panel();
+            this.transCostInput = new System.Windows.Forms.NumericUpDown();
             this.loanInterestInput = new System.Windows.Forms.NumericUpDown();
+            this.LegalFeesInput = new System.Windows.Forms.NumericUpDown();
             this.bankChargesInput = new System.Windows.Forms.NumericUpDown();
+            this.miscInput = new System.Windows.Forms.NumericUpDown();
             this.TaxesInput = new System.Windows.Forms.NumericUpDown();
+            this.offcSuppliesInput = new System.Windows.Forms.NumericUpDown();
             this.panel9 = new System.Windows.Forms.Panel();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -44,10 +49,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.offcSuppliesInput = new System.Windows.Forms.NumericUpDown();
-            this.miscInput = new System.Windows.Forms.NumericUpDown();
-            this.LegalFeesInput = new System.Windows.Forms.NumericUpDown();
-            this.transCostInput = new System.Windows.Forms.NumericUpDown();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -69,19 +70,19 @@
             this.label6 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.regulatoryPanel = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel15.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.loanInterestInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bankChargesInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TaxesInput)).BeginInit();
-            this.panel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.offcSuppliesInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.miscInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LegalFeesInput)).BeginInit();
+            this.regulatoryPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.transCostInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loanInterestInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LegalFeesInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bankChargesInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.miscInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TaxesInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offcSuppliesInput)).BeginInit();
+            this.panel9.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.operationalPanel.SuspendLayout();
@@ -94,7 +95,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.utilitiesInput)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.regulatoryPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -156,6 +156,31 @@
             this.panel6.Size = new System.Drawing.Size(403, 267);
             this.panel6.TabIndex = 9;
             // 
+            // regulatoryPanel
+            // 
+            this.regulatoryPanel.Controls.Add(this.transCostInput);
+            this.regulatoryPanel.Controls.Add(this.loanInterestInput);
+            this.regulatoryPanel.Controls.Add(this.LegalFeesInput);
+            this.regulatoryPanel.Controls.Add(this.bankChargesInput);
+            this.regulatoryPanel.Controls.Add(this.miscInput);
+            this.regulatoryPanel.Controls.Add(this.TaxesInput);
+            this.regulatoryPanel.Controls.Add(this.offcSuppliesInput);
+            this.regulatoryPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.regulatoryPanel.Location = new System.Drawing.Point(180, 39);
+            this.regulatoryPanel.Name = "regulatoryPanel";
+            this.regulatoryPanel.Size = new System.Drawing.Size(223, 228);
+            this.regulatoryPanel.TabIndex = 24;
+            // 
+            // transCostInput
+            // 
+            this.transCostInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.transCostInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.transCostInput.Location = new System.Drawing.Point(28, 13);
+            this.transCostInput.Name = "transCostInput";
+            this.transCostInput.Size = new System.Drawing.Size(120, 23);
+            this.transCostInput.TabIndex = 15;
+            this.transCostInput.Tag = "8";
+            // 
             // loanInterestInput
             // 
             this.loanInterestInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -165,6 +190,16 @@
             this.loanInterestInput.Size = new System.Drawing.Size(120, 23);
             this.loanInterestInput.TabIndex = 23;
             this.loanInterestInput.Tag = "14";
+            // 
+            // LegalFeesInput
+            // 
+            this.LegalFeesInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LegalFeesInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LegalFeesInput.Location = new System.Drawing.Point(28, 42);
+            this.LegalFeesInput.Name = "LegalFeesInput";
+            this.LegalFeesInput.Size = new System.Drawing.Size(120, 23);
+            this.LegalFeesInput.TabIndex = 17;
+            this.LegalFeesInput.Tag = "9";
             // 
             // bankChargesInput
             // 
@@ -176,6 +211,16 @@
             this.bankChargesInput.TabIndex = 22;
             this.bankChargesInput.Tag = "13";
             // 
+            // miscInput
+            // 
+            this.miscInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.miscInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.miscInput.Location = new System.Drawing.Point(28, 71);
+            this.miscInput.Name = "miscInput";
+            this.miscInput.Size = new System.Drawing.Size(120, 23);
+            this.miscInput.TabIndex = 18;
+            this.miscInput.Tag = "10";
+            // 
             // TaxesInput
             // 
             this.TaxesInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -185,6 +230,16 @@
             this.TaxesInput.Size = new System.Drawing.Size(120, 23);
             this.TaxesInput.TabIndex = 21;
             this.TaxesInput.Tag = "12";
+            // 
+            // offcSuppliesInput
+            // 
+            this.offcSuppliesInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.offcSuppliesInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.offcSuppliesInput.Location = new System.Drawing.Point(28, 100);
+            this.offcSuppliesInput.Name = "offcSuppliesInput";
+            this.offcSuppliesInput.Size = new System.Drawing.Size(120, 23);
+            this.offcSuppliesInput.TabIndex = 20;
+            this.offcSuppliesInput.Tag = "11";
             // 
             // panel9
             // 
@@ -286,46 +341,6 @@
             this.label12.Size = new System.Drawing.Size(140, 29);
             this.label12.TabIndex = 19;
             this.label12.Text = "Transportation cost:";
-            // 
-            // offcSuppliesInput
-            // 
-            this.offcSuppliesInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.offcSuppliesInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.offcSuppliesInput.Location = new System.Drawing.Point(28, 100);
-            this.offcSuppliesInput.Name = "offcSuppliesInput";
-            this.offcSuppliesInput.Size = new System.Drawing.Size(120, 23);
-            this.offcSuppliesInput.TabIndex = 20;
-            this.offcSuppliesInput.Tag = "11";
-            // 
-            // miscInput
-            // 
-            this.miscInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.miscInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.miscInput.Location = new System.Drawing.Point(28, 71);
-            this.miscInput.Name = "miscInput";
-            this.miscInput.Size = new System.Drawing.Size(120, 23);
-            this.miscInput.TabIndex = 18;
-            this.miscInput.Tag = "10";
-            // 
-            // LegalFeesInput
-            // 
-            this.LegalFeesInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LegalFeesInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LegalFeesInput.Location = new System.Drawing.Point(28, 42);
-            this.LegalFeesInput.Name = "LegalFeesInput";
-            this.LegalFeesInput.Size = new System.Drawing.Size(120, 23);
-            this.LegalFeesInput.TabIndex = 17;
-            this.LegalFeesInput.Tag = "9";
-            // 
-            // transCostInput
-            // 
-            this.transCostInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.transCostInput.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.transCostInput.Location = new System.Drawing.Point(28, 13);
-            this.transCostInput.Name = "transCostInput";
-            this.transCostInput.Size = new System.Drawing.Size(120, 23);
-            this.transCostInput.TabIndex = 15;
-            this.transCostInput.Tag = "8";
             // 
             // panel5
             // 
@@ -566,21 +581,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Operating Expenses";
             // 
-            // regulatoryPanel
-            // 
-            this.regulatoryPanel.Controls.Add(this.transCostInput);
-            this.regulatoryPanel.Controls.Add(this.loanInterestInput);
-            this.regulatoryPanel.Controls.Add(this.LegalFeesInput);
-            this.regulatoryPanel.Controls.Add(this.bankChargesInput);
-            this.regulatoryPanel.Controls.Add(this.miscInput);
-            this.regulatoryPanel.Controls.Add(this.TaxesInput);
-            this.regulatoryPanel.Controls.Add(this.offcSuppliesInput);
-            this.regulatoryPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.regulatoryPanel.Location = new System.Drawing.Point(180, 39);
-            this.regulatoryPanel.Name = "regulatoryPanel";
-            this.regulatoryPanel.Size = new System.Drawing.Size(223, 228);
-            this.regulatoryPanel.TabIndex = 24;
-            // 
             // addExpenses
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -593,15 +593,16 @@
             this.panel15.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.regulatoryPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.transCostInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.loanInterestInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LegalFeesInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bankChargesInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.miscInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TaxesInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.offcSuppliesInput)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.offcSuppliesInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.miscInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LegalFeesInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.transCostInput)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -617,7 +618,6 @@
             this.panel7.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.regulatoryPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

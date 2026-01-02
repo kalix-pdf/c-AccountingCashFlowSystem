@@ -4,17 +4,15 @@ using System.Data.SqlClient;
 
 namespace c_AccountingCashFlowSystem.Forms
 {
-    public class Income
+    public class expenseItem
     {
-        public DateTime CreatedAt { get; set; }
-        public int Amount { get; set; }
-        public string IncomeType { get; set; }
-        public string referenceNumber { get; set; }
+        public int ExpenseTag { get; set; }
+        public decimal Amount { get; set; }
     }
     public class ExpenseCategory
     {
         public string CategoryName { get; set; }
-        public int categoryID { get; set; }
+        public int amount { get; set; }
     }
     public class RevenueTotal
     {
@@ -25,8 +23,10 @@ namespace c_AccountingCashFlowSystem.Forms
     {
         private string connectionString = new Client().Connection();
         private string _TType;
+        public int currentYear => DateTime.Now.Year;
+        public string currentMonth => DateTime.Now.ToString("MMM");
 
-        public int addNewTransaction(decimal amount, int paymentmethod, string referenceNumber, int transactionType = 0)
+        public int addNewTransaction(decimal amount, string referenceNumber, int paymentmethod = 0, int transactionType = 0)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -63,17 +63,18 @@ namespace c_AccountingCashFlowSystem.Forms
 
         //income
 
-        public Dictionary<int, decimal> getIncomeSummaryMonthly(int year)
+        public Dictionary<int, decimal> getIncomeAndExpensesSummaryMonthly(string type = "Income")
         {
             var result = new Dictionary<int, decimal>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(@"
                     SELECT MONTH(CreatedAt) AS Month, SUM(Amount) As TotalIncome 
-                    FROM Transactions WHERE TransactionType = 'Income' AND YEAR(CreatedAt) = @year
+                    FROM Transactions WHERE TransactionType = @type AND YEAR(CreatedAt) = @year
                     GROUP BY MONTH(CreatedAt) ORDER BY Month;", conn))
             {
-                cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@year", currentYear);
+                cmd.Parameters.AddWithValue("@type", type);
                 conn.Open();
 
                 using (var reader = cmd.ExecuteReader())
@@ -105,7 +106,7 @@ namespace c_AccountingCashFlowSystem.Forms
                 SELECT SUM(CASE WHEN YEAR(CreatedAt) = @year AND MONTH(CreatedAt) = @currentMonth 
                 THEN Amount ELSE 0 END) AS CurrentMonth, SUM(CASE WHEN YEAR(CreatedAt) = @year 
                 AND MONTH(CreatedAt) = @currentMonth - 1 AND @currentMonth > 1 THEN Amount ELSE 0  
-                END) AS LastMonth FROM Transactions;", conn))
+                END) AS LastMonth FROM Transactions WHERE TransactionType = 'Income';", conn))
             {
                 conn.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -129,50 +130,69 @@ namespace c_AccountingCashFlowSystem.Forms
                 return revenueTotals;
             }
         }
-        public decimal getCurrentTotalRevenue(int year)
+        public decimal getCurrentTotalRevenueAndExpenses(string type = "Income")
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(
-                @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE YEAR(CreatedAt) = @year
+                @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE YEAR(CreatedAt) = @year 
+                AND TransactionType = @type
                 GROUP BY YEAR(CreatedAt) ORDER BY YEAR(CreatedAt) DESC", conn))
             {
-                cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@year", currentYear);
+                cmd.Parameters.AddWithValue("@type", type);
                 conn.Open();
                 return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
             }
         }
 
-        //expenses
-
-        public Dictionary<int, decimal> getExpensesSumarryMonth(int year)
+        public decimal getCurrentNetIncome()
         {
-            var result = new Dictionary<int, decimal>();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(@"
-                    SELECT MONTH(CreatedAt) AS Month, SUM(Amount) As TotalIncome 
-                    FROM Transactions WHERE TransactionType = 'Expenses' AND YEAR(CreatedAt) = @year
-                    GROUP BY MONTH(CreatedAt) ORDER BY Month;", conn))
             {
-                cmd.Parameters.AddWithValue("@year", year);
-                conn.Open();
-
-                using (var reader = cmd.ExecuteReader())
+                decimal income = 0;
+                decimal expenses = 0;
+                try
                 {
-                    while (reader.Read())
+                    using (SqlCommand cmd = new SqlCommand(
+                        @"SELECT SUM(CASE WHEN TransactionType = 'Income' THEN Amount ELSE 0 END) AS totalIncome, 
+                        SUM(CASE WHEN TransactionType = 'Expenses' THEN Amount ELSE 0 END) AS totalExpenses
+                        FROM Transactions WHERE YEAR(CreatedAt) = @year", conn))
                     {
-                        int month = reader.GetInt32(0);
-                        decimal total = reader.GetDecimal(1);
-
-                        result[month] = total;
+                        conn.Open();
+                        cmd.Parameters.AddWithValue("@year", currentYear);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                income = reader.IsDBNull(0) ? 0 : reader.GetDecimal(0);
+                                expenses = reader.IsDBNull(1) ? 0 : reader.GetDecimal(1);
+                             
+                            }
+                        }
                     }
+                    return (income - expenses);
+
+                }
+                catch
+                {
+                    throw;
                 }
             }
-
-            return result;
         }
+        public decimal getTotalNetIncome()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(
+                @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE TransactionType = 'Income' GROUP BY YEAR(ExpenseDate) 
+                ORDER BY YEAR(ExpenseDate) DESC", conn))
+            {
+                conn.Open();
+                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+            }
+        }
+        //expenses
 
-        public bool addExpense(int categoryID, decimal amount, int transactionID)
+        public bool addExpense(List<expenseItem> expenses, int transactionID)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -181,15 +201,18 @@ namespace c_AccountingCashFlowSystem.Forms
 
                 try
                 {
-                    string EQuery = "INSERT INTO expenses (transactionID, categoryID, expenseDate, amount) " +
+                    foreach (var expense in expenses)
+                    {
+                        string EQuery = "INSERT INTO expenses (transactionID, categoryID, expenseDate, amount) " +
                         "VALUES (@transacID, @categID, @expenseDate, @amount)";
-                    SqlCommand Ecmd = new SqlCommand(EQuery, conn, trans);
+                        SqlCommand Ecmd = new SqlCommand(EQuery, conn, trans);
 
-                    Ecmd.Parameters.AddWithValue("@transacID", transactionID);
-                    Ecmd.Parameters.AddWithValue("@categID", categoryID);
-                    Ecmd.Parameters.AddWithValue("@expenseDate", DateTime.Now);
-                    Ecmd.Parameters.AddWithValue("@amount", amount);
-                    Ecmd.ExecuteNonQuery();
+                        Ecmd.Parameters.AddWithValue("@transacID", transactionID);
+                        Ecmd.Parameters.AddWithValue("@categID", expense.ExpenseTag);
+                        Ecmd.Parameters.AddWithValue("@expenseDate", DateTime.Now);
+                        Ecmd.Parameters.AddWithValue("@amount", expense.Amount);
+                        Ecmd.ExecuteNonQuery();
+                    }
 
                     trans.Commit();
                     return true;
@@ -201,15 +224,38 @@ namespace c_AccountingCashFlowSystem.Forms
                 }
             }
         }
-        public decimal getMonthlyExpenses()
+        public List<ExpenseCategory> getExpenses()
         {
+            List<ExpenseCategory> expenses = new List<ExpenseCategory>();
+
             using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(
-                @"SELECT TOP 1 SUM(Amount) FROM Expenses GROUP BY MONTH(ExpenseDate) 
-                ORDER BY MONTH(ExpenseDate) DESC", conn))
             {
-                conn.Open();
-                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+                try
+                {
+                    string Query = @"DECLARE @currentMonth INT = MONTH(GETDATE());
+                        SELECT e.amount, ec.categoryName FROM expenses AS e 
+                        LEFT JOIN expenseCategories AS ec ON e.categoryID = ec.categoryID WHERE MONTH(expenseDate) = @currentMonth";
+                    using (SqlCommand cmd = new SqlCommand(Query, conn))
+                    {
+                        conn.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                expenses.Add(new ExpenseCategory
+                                {
+                                    amount = Convert.ToInt32(reader["amount"]),
+                                    CategoryName = reader["categoryName"].ToString(),
+                                });
+                            }
+                        }
+                    }
+                    return expenses;
+                }
+                catch
+                {
+                    throw;
+                }
             }
         }
         public decimal getYearlyExpenses()
@@ -219,7 +265,7 @@ namespace c_AccountingCashFlowSystem.Forms
                 @"SELECT TOP 1 SUM(Amount) FROM Expenses GROUP BY YEAR(ExpenseDate) 
                 ORDER BY YEAR(ExpenseDate) DESC", conn))
                   {
-                      conn.Open();
+                    conn.Open();
                     return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
                   }
         }

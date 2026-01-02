@@ -1,36 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace c_AccountingCashFlowSystem.Forms
 {
+    
     public partial class addExpenses : Form
     {
+        IEModel db = new IEModel();
         public addExpenses()
         {
             InitializeComponent();
         }
+        private List<expenseItem> getExpensesfromForm()
+        {
+            var expenses = new List<expenseItem>();
+
+            foreach (var nud in operationalPanel.Controls
+                .OfType<NumericUpDown>()
+                .Concat(regulatoryPanel.Controls.OfType<NumericUpDown>()))
+                {
+                    if (nud.Value <= 0 || nud.Tag == null)
+                        continue;
+
+                    if (!int.TryParse(nud.Tag.ToString(), out int tagId))
+                        continue; 
+
+                    expenses.Add(new expenseItem
+                    {
+                        ExpenseTag = tagId,
+                        Amount = nud.Value
+                    });
+                }
+
+            return expenses;
+        }
         private bool validateForm()
         {
-            bool operationalValidate = operationalPanel.Controls.OfType<NumericUpDown>()
-                .All(n => n.Value > 0);
-            bool regulatoryValidae = regulatoryPanel.Controls.OfType<NumericUpDown>()
-                .All (n => n.Value > 0);
 
-            return (operationalValidate && regulatoryValidae) ? true : false;
+            return operationalPanel.Controls.OfType<NumericUpDown>().Any(n => n.Value > 0)
+                || regulatoryPanel.Controls.OfType<NumericUpDown>().Any(n => n.Value > 0);
         }
 
         private void submitBtn_Click(object sender, EventArgs e)
         {
-            if (validateForm())
+            if (!validateForm())
             {
-
+                MessageBox.Show("Please enter at least one Operational and one Regulatory expense.",
+                    "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-            else
+           
+            var expenses = getExpensesfromForm();
+            string referenceNo = ClientDatabase.GenerateReferenceNumber();
+            decimal total = expenses.Sum(a => a.Amount);
+
+            int TransactionID = db.addNewTransaction(total, referenceNo);
+            bool success = db.addExpense(expenses, TransactionID);
+
+            if (success)
             {
-                MessageBox.Show("No Data Input, Fill out atleast one or two expensess", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Expense Added Successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
         }
     }
