@@ -4,6 +4,11 @@ using System.Data.SqlClient;
 
 namespace c_AccountingCashFlowSystem.Forms
 {
+    public class monthlyExpenses
+    {
+        public int TransactionId { get; set;  }
+        public decimal amount { get; set; }
+    }
     public class expenseItem
     {
         public int ExpenseTag { get; set; }
@@ -27,32 +32,44 @@ namespace c_AccountingCashFlowSystem.Forms
         public int currentYear => DateTime.Now.Year;
         public string currentMonth => DateTime.Now.ToString("MMM");
 
-        public int addNewTransaction(decimal amount, string referenceNumber, int paymentmethod = 0, int transactionType = 0)
+        public int addNewTransaction(decimal amount, string referenceNumber, int TransactionID = 0, int paymentmethod = 0, int transactionType = 0)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 SqlTransaction trans = conn.BeginTransaction();
-                int transactionID = 0;
+                
+                _TType = (transactionType == 1) ? "Income" : "Expenses";
 
                 try
                 {
-                    _TType = (transactionType == 1) ? "Income" : "Expenses";
+                    if (TransactionID > 0)
+                    {
+                        string Query = @"UPDATE Transactions SET Amount = @amount WHERE TransactionId = @transacID";
+                        SqlCommand cmd = new SqlCommand(Query, conn, trans);
 
-                    string TQuery = @"INSERT INTO Transactions (ReferenceNo, Amount, TransactionType, PaymentMethod) " +
-                        "VALUES (@refnum, @amount, @transacType, @pymethod);" +
-                        "SELECT SCOPE_IDENTITY();";
-                    SqlCommand Tcmd = new SqlCommand(TQuery, conn, trans);
+                        cmd.Parameters.AddWithValue("@amount", amount);
+                        cmd.Parameters.AddWithValue("@transacID", TransactionID);
 
-                    Tcmd.Parameters.AddWithValue("@refnum", referenceNumber);
-                    Tcmd.Parameters.AddWithValue("@amount", amount);
-                    Tcmd.Parameters.AddWithValue("@transacType", _TType);
-                    Tcmd.Parameters.AddWithValue("@pymethod", paymentmethod);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        string TQuery = @"INSERT INTO Transactions (ReferenceNo, Amount, TransactionType, PaymentMethod) " +
+                            "VALUES (@refnum, @amount, @transacType, @pymethod);" +
+                            "SELECT SCOPE_IDENTITY();";
+                        SqlCommand Tcmd = new SqlCommand(TQuery, conn, trans);
 
-                    transactionID = Convert.ToInt32(Tcmd.ExecuteScalar());
+                        Tcmd.Parameters.AddWithValue("@refnum", referenceNumber);
+                        Tcmd.Parameters.AddWithValue("@amount", amount);
+                        Tcmd.Parameters.AddWithValue("@transacType", _TType);
+                        Tcmd.Parameters.AddWithValue("@pymethod", paymentmethod);
+
+                        TransactionID = Convert.ToInt32(Tcmd.ExecuteScalar());
+                    }
 
                     trans.Commit();
-                    return transactionID;
+                    return TransactionID;
                 }
                 catch
                 {
@@ -135,13 +152,13 @@ namespace c_AccountingCashFlowSystem.Forms
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(
-                @"SELECT TOP 1 SUM(Amount) FROM Transactions WHERE YEAR(CreatedAt) = @year 
+                @"SELECT ISNULL(SUM(Amount), 0) FROM Transactions WHERE YEAR(CreatedAt) = @year 
                 AND TransactionType = @type", conn))
             {
                 cmd.Parameters.AddWithValue("@year", currentYear);
                 cmd.Parameters.AddWithValue("@type", type);
                 conn.Open();
-                return Convert.ToDecimal(cmd.ExecuteScalar() ?? 0);
+                return Convert.ToDecimal(cmd.ExecuteScalar());
             }
         }
 
@@ -203,18 +220,56 @@ namespace c_AccountingCashFlowSystem.Forms
             return (income - expenses);
         }
         //expenses
-        public decimal checkExpenseThisMonth(string type = "Expenses")
+        public List<monthlyExpenses> checkExpenseThisMonth()
         {
+            List<monthlyExpenses> monthlyExpenses = new List<monthlyExpenses>();
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(
-                @"SELECT ISNULL(SUM(Amount), 0) FROM Transactions WHERE YEAR(CreatedAt) = @year 
-                AND TransactionType = @type AND MONTH(CreatedAt) = MONTH(GETDATE());", conn))
+                @"SELECT TransactionId, Amount FROM Transactions WHERE YEAR(CreatedAt) = @year 
+                AND TransactionType = 'Expenses' AND MONTH(CreatedAt) = MONTH(GETDATE());", conn))
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@year", currentYear);
-                cmd.Parameters.AddWithValue("@type", type);
-                return Convert.ToDecimal(cmd.ExecuteScalar());
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        monthlyExpenses.Add(new monthlyExpenses
+                        {
+                            TransactionId = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
+                            amount = reader.IsDBNull(1) ? 0 : reader.GetDecimal(1)
+                        });
+                    }
+                }
             }
+            return monthlyExpenses;
+        }
+        public int getTransactionID()
+        {
+            List<monthlyExpenses> monthlyExpenses = checkExpenseThisMonth();
+
+            foreach (var monthExpenses in monthlyExpenses)
+            {
+                if (monthExpenses.TransactionId > 0)
+                {
+                    return monthExpenses.TransactionId;
+                }
+            }
+            return 0;
+        }
+        public decimal isCheckMonthlyExpense()
+        {
+            List<monthlyExpenses> monthlyExpenses = checkExpenseThisMonth();
+
+            foreach (var monthExpenses in monthlyExpenses)
+            {
+                if (monthExpenses.amount > 0)
+                {
+                     return monthExpenses.amount;
+                }
+            }
+            return 0;
         }
 
         public bool addExpense(List<expenseItem> expenses, int transactionID)

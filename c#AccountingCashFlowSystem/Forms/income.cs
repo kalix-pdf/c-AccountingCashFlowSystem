@@ -30,14 +30,14 @@ namespace c_AccountingCashFlowSystem.Forms
         private void getmonthlyIncome()
         {
             List<RevenueTotal> monthlyRevenues = db.getMonthlyRevenue();
-            decimal result = db.checkExpenseThisMonth();
-
-            if (result > 0)
+            decimal isCheckMonthlyExpenses = db.isCheckMonthlyExpense();
+          
+            if (isCheckMonthlyExpenses > 0)
             {
-                checkExpenseLabel.Text = "P" + db.checkExpenseThisMonth().ToString() + " of expense was deducted";
+                checkExpenseLabel.Text = "P" + isCheckMonthlyExpenses.ToString() + " of expense was deducted";
                 month.Text = db.currentMonth;
             }
-
+            
             foreach (RevenueTotal revenue in monthlyRevenues)
             {
                 monthlyRevenue.Text = "P" + revenue.currentMonthTotal.ToString("N0");

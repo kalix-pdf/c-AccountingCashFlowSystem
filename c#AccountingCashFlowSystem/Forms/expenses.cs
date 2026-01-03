@@ -28,10 +28,21 @@ namespace c_AccountingCashFlowSystem.Forms
         private void load_data()
         {
             decimal currentTotalExpenses = db.getCurrentTotalRevenueAndExpenses("Expenses");
-        
-            annualExpenses.Text = currentTotalExpenses.ToString();
+            decimal isCheckMonthlyExpenses = db.isCheckMonthlyExpense();
+
+            annualExpenses.Text = (currentTotalExpenses > 0) ? "₱" + currentTotalExpenses.ToString() : "₱0";
             asOfNowTotalExpense.Text = "As of " + db.currentMonth + " " + db.currentYear;
 
+            expenseSummary.Text = "Expense Summary - " + db.currentYear;
+            monthLabel.Text = " - " + db.currentMonth;
+
+            if (isCheckMonthlyExpenses > 0)
+            {
+                expenseCheck.Text = "₱" + isCheckMonthlyExpenses.ToString() + " expenses";
+                monthlyExpenses.Text = "₱" + isCheckMonthlyExpenses.ToString() + " - " + db.currentMonth;
+                yearLabel.Text = db.currentMonth;
+            }
+            
         }
         private void load_listView_data()
         {

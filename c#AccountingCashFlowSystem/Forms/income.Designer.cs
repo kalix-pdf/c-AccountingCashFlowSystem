@@ -73,6 +73,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.totalSalesData = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
+            this.label15 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -192,11 +193,11 @@
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label16.Location = new System.Drawing.Point(13, 18);
+            this.label16.Location = new System.Drawing.Point(66, 21);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(185, 20);
+            this.label16.Size = new System.Drawing.Size(91, 20);
             this.label16.TabIndex = 2;
-            this.label16.Text = "Gross Operational Income";
+            this.label16.Text = "Add Income";
             // 
             // roundedPanel6
             // 
@@ -290,12 +291,13 @@
             // 
             this.yearIncomePanel.BackColor = System.Drawing.Color.PaleTurquoise;
             this.yearIncomePanel.BorderRadius = 20;
+            this.yearIncomePanel.Controls.Add(this.label15);
             this.yearIncomePanel.Controls.Add(this.asOfTotalRev);
             this.yearIncomePanel.Controls.Add(this.currentRevenue);
             this.yearIncomePanel.Controls.Add(this.yearIncomeLabel);
             this.yearIncomePanel.Location = new System.Drawing.Point(288, 113);
             this.yearIncomePanel.Name = "yearIncomePanel";
-            this.yearIncomePanel.Size = new System.Drawing.Size(237, 63);
+            this.yearIncomePanel.Size = new System.Drawing.Size(237, 90);
             this.yearIncomePanel.TabIndex = 9;
             // 
             // asOfTotalRev
@@ -307,7 +309,7 @@
             this.asOfTotalRev.Name = "asOfTotalRev";
             this.asOfTotalRev.Size = new System.Drawing.Size(112, 19);
             this.asOfTotalRev.TabIndex = 4;
-            this.asOfTotalRev.Text = "As of Jan. (2026)";
+            this.asOfTotalRev.Text = "As of Jan. (2022)";
             // 
             // currentRevenue
             // 
@@ -337,7 +339,7 @@
             this.roundedPanel4.BorderRadius = 20;
             this.roundedPanel4.Location = new System.Drawing.Point(297, 120);
             this.roundedPanel4.Name = "roundedPanel4";
-            this.roundedPanel4.Size = new System.Drawing.Size(237, 63);
+            this.roundedPanel4.Size = new System.Drawing.Size(237, 90);
             this.roundedPanel4.TabIndex = 7;
             // 
             // monthIncomePanel
@@ -351,9 +353,9 @@
             this.monthIncomePanel.Controls.Add(this.percentIncrease);
             this.monthIncomePanel.Controls.Add(this.monthlyRevenue);
             this.monthIncomePanel.Controls.Add(this.monthIncomeLabel);
-            this.monthIncomePanel.Location = new System.Drawing.Point(288, 189);
+            this.monthIncomePanel.Location = new System.Drawing.Point(288, 216);
             this.monthIncomePanel.Name = "monthIncomePanel";
-            this.monthIncomePanel.Size = new System.Drawing.Size(237, 190);
+            this.monthIncomePanel.Size = new System.Drawing.Size(237, 191);
             this.monthIncomePanel.TabIndex = 10;
             // 
             // label6
@@ -418,9 +420,9 @@
             this.monthlyRevenue.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.monthlyRevenue.Location = new System.Drawing.Point(12, 44);
             this.monthlyRevenue.Name = "monthlyRevenue";
-            this.monthlyRevenue.Size = new System.Drawing.Size(93, 21);
+            this.monthlyRevenue.Size = new System.Drawing.Size(94, 21);
             this.monthlyRevenue.TabIndex = 2;
-            this.monthlyRevenue.Text = "₱500 (Jan.)";
+            this.monthlyRevenue.Text = "₱500 (Feb.)";
             // 
             // monthIncomeLabel
             // 
@@ -437,9 +439,9 @@
             // 
             this.roundedPanel8.BackColor = System.Drawing.Color.DarkSlateGray;
             this.roundedPanel8.BorderRadius = 20;
-            this.roundedPanel8.Location = new System.Drawing.Point(297, 196);
+            this.roundedPanel8.Location = new System.Drawing.Point(297, 223);
             this.roundedPanel8.Name = "roundedPanel8";
-            this.roundedPanel8.Size = new System.Drawing.Size(237, 190);
+            this.roundedPanel8.Size = new System.Drawing.Size(237, 191);
             this.roundedPanel8.TabIndex = 8;
             // 
             // weekIncomePanel
@@ -528,7 +530,7 @@
             this.yearLabel.Name = "yearLabel";
             this.yearLabel.Size = new System.Drawing.Size(56, 21);
             this.yearLabel.TabIndex = 5;
-            this.yearLabel.Text = "(2026)";
+            this.yearLabel.Text = "(2022)";
             // 
             // label9
             // 
@@ -582,6 +584,17 @@
             this.roundedPanel1.Name = "roundedPanel1";
             this.roundedPanel1.Size = new System.Drawing.Size(235, 242);
             this.roundedPanel1.TabIndex = 5;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.Black;
+            this.label15.Location = new System.Drawing.Point(14, 53);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(123, 15);
+            this.label15.TabIndex = 8;
+            this.label15.Text = "before any deductions";
             // 
             // income
             // 
@@ -669,5 +682,6 @@
         private System.Windows.Forms.Label checkExpenseLabel;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label month;
+        private System.Windows.Forms.Label label15;
     }
 }

@@ -9,9 +9,12 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class addExpenses : Form
     {
         IEModel db = new IEModel();
+        decimal isCheckMonthlyExpenses;
+
         public addExpenses()
         {
             InitializeComponent();
+            isCheckMonthlyExpenses = db.isCheckMonthlyExpense();
         }
         private List<expenseItem> getExpensesfromForm()
         {
@@ -42,7 +45,7 @@ namespace c_AccountingCashFlowSystem.Forms
             return operationalPanel.Controls.OfType<NumericUpDown>().Any(n => n.Value > 0)
                 || regulatoryPanel.Controls.OfType<NumericUpDown>().Any(n => n.Value > 0);
         }
-
+        
         private void submitBtn_Click(object sender, EventArgs e)
         {
             if (!validateForm())
@@ -51,28 +54,39 @@ namespace c_AccountingCashFlowSystem.Forms
                     "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-           
+
             var expenses = getExpensesfromForm();
             string referenceNo = ClientDatabase.GenerateReferenceNumber();
             decimal total = expenses.Sum(a => a.Amount);
+            int TransactionID;
 
-            int TransactionID = db.addNewTransaction(total, referenceNo);
-            bool success = db.addExpense(expenses, TransactionID);
+            int? existingTransactionId = db.getTransactionID();
 
-            if (success)
+            if (existingTransactionId > 0)
             {
-                MessageBox.Show("Expense Added Successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                TransactionID = (int)existingTransactionId;
+                db.addNewTransaction(total, referenceNo, TransactionID);
             }
+            else
+            {
+                TransactionID = db.addNewTransaction(total, referenceNo);
+            }
+
+            //bool success = db.addExpense(expenses, TransactionID);
+
+            //if (success)
+            //{
+            //    MessageBox.Show("Expense Added Successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    this.DialogResult = DialogResult.OK;
+            //    this.Close();
+            //}
         }
 
         private void addExpenses_Load(object sender, EventArgs e)
         {
-            decimal checkExpense = db.checkExpenseThisMonth();
             List<ExpenseCategory> expenses = db.getExpenses();
 
-            if (checkExpense > 0)
+            if (isCheckMonthlyExpenses > 0)
             {
                 MessageBox.Show("You have already added your expenses for this month, You are only allowed to edit the existing expenses",
                     "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
