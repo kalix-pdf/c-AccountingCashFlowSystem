@@ -350,55 +350,6 @@ public class ClientDatabase
         }
     }
 
-    public int getTotalIncome()
-    {
-        int totalIncome = 0;
-        try
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT SUM(Amount) AS TotalIncome FROM Transactions WHERE TransactionType = 'Income'";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                object result = cmd.ExecuteScalar();
-                if (result != DBNull.Value)
-                {
-                    totalIncome = Convert.ToInt32(result);
-                }
-            }
-            return totalIncome;
-
-        }
-        catch
-        {
-            throw;
-        }
-    }
-
-    public int getTotalExpenses()
-    {
-        int totalExpenses = 0;
-        try
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT SUM(Amount) AS TotalExpenses FROM Transactions WHERE TransactionType = 'Expenses'";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                object result = cmd.ExecuteScalar();
-                if (result != DBNull.Value)
-                {
-                    totalExpenses = Convert.ToInt32(result);
-                }
-            }
-            return totalExpenses;
-
-        }
-        catch
-        {
-            throw;
-        }
-    }
 
 }
 

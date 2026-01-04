@@ -58,6 +58,7 @@
             // 
             // reports
             // 
+            this.reports.Cursor = System.Windows.Forms.Cursors.Hand;
             this.reports.Dock = System.Windows.Forms.DockStyle.Top;
             this.reports.FlatAppearance.BorderSize = 0;
             this.reports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -78,6 +79,7 @@
             // 
             // expenses
             // 
+            this.expenses.Cursor = System.Windows.Forms.Cursors.Hand;
             this.expenses.Dock = System.Windows.Forms.DockStyle.Top;
             this.expenses.FlatAppearance.BorderSize = 0;
             this.expenses.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -98,6 +100,7 @@
             // 
             // income
             // 
+            this.income.Cursor = System.Windows.Forms.Cursors.Hand;
             this.income.Dock = System.Windows.Forms.DockStyle.Top;
             this.income.FlatAppearance.BorderSize = 0;
             this.income.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -118,6 +121,7 @@
             // 
             // dashboard
             // 
+            this.dashboard.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dashboard.Dock = System.Windows.Forms.DockStyle.Top;
             this.dashboard.FlatAppearance.BorderSize = 0;
             this.dashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;

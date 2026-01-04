@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace c_AccountingCashFlowSystem.Forms
@@ -32,7 +33,7 @@ namespace c_AccountingCashFlowSystem.Forms
         public int currentYear => DateTime.Now.Year;
         public string currentMonth => DateTime.Now.ToString("MMM");
 
-        public int addNewTransaction(decimal amount, string referenceNumber, int TransactionID = 0, int paymentmethod = 0, int transactionType = 0)
+        public int addNewTransaction(decimal amount, int TransactionID = 0, string referenceNumber = null, int paymentmethod = 0, int transactionType = 0)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -40,6 +41,11 @@ namespace c_AccountingCashFlowSystem.Forms
                 SqlTransaction trans = conn.BeginTransaction();
                 
                 _TType = (transactionType == 1) ? "Income" : "Expenses";
+
+                if (string.IsNullOrEmpty(referenceNumber))
+                {
+                    referenceNumber = ClientDatabase.GenerateReferenceNumber();
+                }
 
                 try
                 {
@@ -281,16 +287,19 @@ namespace c_AccountingCashFlowSystem.Forms
 
                 try
                 {
+                    string EQuery = @"IF EXISTS (SELECT 1 FROM expenses WHERE transactionID 
+                        = @transacID AND categoryID = @categID) BEGIN UPDATE expenses SET Amount = @amount, expenseDate = 
+                        @expenseDate WHERE transactionID = @transacID AND categoryID = @categID END ELSE BEGIN INSERT INTO 
+                        expenses(transactionID, categoryID, expenseDate, amount) VALUES (@transacID, @categID, @expenseDate, @amount) END";
+                    
                     foreach (var expense in expenses)
                     {
-                        string EQuery = "INSERT INTO expenses (transactionID, categoryID, expenseDate, amount) " +
-                        "VALUES (@transacID, @categID, @expenseDate, @amount)";
                         SqlCommand Ecmd = new SqlCommand(EQuery, conn, trans);
 
-                        Ecmd.Parameters.AddWithValue("@transacID", transactionID);
-                        Ecmd.Parameters.AddWithValue("@categID", expense.ExpenseTag);
-                        Ecmd.Parameters.AddWithValue("@expenseDate", DateTime.Now);
-                        Ecmd.Parameters.AddWithValue("@amount", expense.Amount);
+                        Ecmd.Parameters.AddWithValue("@transacID", SqlDbType.Int).Value = transactionID;
+                        Ecmd.Parameters.AddWithValue("@categID", SqlDbType.Int).Value = expense.ExpenseTag;
+                        Ecmd.Parameters.AddWithValue("@expenseDate", SqlDbType.DateTime).Value = DateTime.Now;
+                        Ecmd.Parameters.AddWithValue("@amount", SqlDbType.Decimal).Value = expense.Amount;
                         Ecmd.ExecuteNonQuery();
                     }
 
@@ -336,6 +345,20 @@ namespace c_AccountingCashFlowSystem.Forms
                 catch
                 {
                     throw;
+                }
+            }
+        }
+
+        public decimal getTotalExpenses()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string Query = "SELECT ISNULL(SUM(Amount), 0) FROM Transactions WHERE TransactionType = " +
+                    "'Expenses'";
+                using (SqlCommand cmd = new SqlCommand(Query, conn))
+                {
+                    conn.Open();
+                    return Convert.ToDecimal(cmd.ExecuteScalar());
                 }
             }
         }

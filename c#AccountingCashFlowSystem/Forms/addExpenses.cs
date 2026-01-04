@@ -56,7 +56,6 @@ namespace c_AccountingCashFlowSystem.Forms
             }
 
             var expenses = getExpensesfromForm();
-            string referenceNo = ClientDatabase.GenerateReferenceNumber();
             decimal total = expenses.Sum(a => a.Amount);
             int TransactionID;
 
@@ -65,21 +64,21 @@ namespace c_AccountingCashFlowSystem.Forms
             if (existingTransactionId > 0)
             {
                 TransactionID = (int)existingTransactionId;
-                db.addNewTransaction(total, referenceNo, TransactionID);
+                db.addNewTransaction(total, TransactionID);
             }
             else
             {
-                TransactionID = db.addNewTransaction(total, referenceNo);
+                TransactionID = db.addNewTransaction(total);
             }
 
-            //bool success = db.addExpense(expenses, TransactionID);
+            bool success = db.addExpense(expenses, TransactionID);
 
-            //if (success)
-            //{
-            //    MessageBox.Show("Expense Added Successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    this.DialogResult = DialogResult.OK;
-            //    this.Close();
-            //}
+            if (success)
+            {
+                MessageBox.Show("Expense Added Successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
         private void addExpenses_Load(object sender, EventArgs e)

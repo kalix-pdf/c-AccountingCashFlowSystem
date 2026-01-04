@@ -48,6 +48,7 @@
             this.labe = new System.Windows.Forms.Label();
             this.roundedPanel3 = new RoundedPanel();
             this.yearIncomePanel = new RoundedPanel();
+            this.label15 = new System.Windows.Forms.Label();
             this.asOfTotalRev = new System.Windows.Forms.Label();
             this.currentRevenue = new System.Windows.Forms.Label();
             this.yearIncomeLabel = new System.Windows.Forms.Label();
@@ -73,7 +74,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.totalSalesData = new System.Windows.Forms.Label();
             this.roundedPanel1 = new RoundedPanel();
-            this.label15 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -210,7 +210,7 @@
             // 
             // roundedPanel2
             // 
-            this.roundedPanel2.BackColor = System.Drawing.Color.LightCyan;
+            this.roundedPanel2.BackColor = System.Drawing.Color.DarkSlateBlue;
             this.roundedPanel2.BorderRadius = 20;
             this.roundedPanel2.Controls.Add(this.label13);
             this.roundedPanel2.Controls.Add(this.label12);
@@ -226,7 +226,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.ForeColor = System.Drawing.Color.Black;
+            this.label13.ForeColor = System.Drawing.Color.White;
             this.label13.Location = new System.Drawing.Point(257, 41);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(134, 19);
@@ -237,7 +237,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.Color.Black;
+            this.label12.ForeColor = System.Drawing.Color.White;
             this.label12.Location = new System.Drawing.Point(256, 21);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(97, 19);
@@ -248,7 +248,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(15, 41);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 19);
@@ -260,7 +260,7 @@
             // 
             this.TotalNetIncome.AutoSize = true;
             this.TotalNetIncome.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TotalNetIncome.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TotalNetIncome.ForeColor = System.Drawing.Color.White;
             this.TotalNetIncome.Location = new System.Drawing.Point(147, 18);
             this.TotalNetIncome.Name = "TotalNetIncome";
             this.TotalNetIncome.Size = new System.Drawing.Size(34, 25);
@@ -271,7 +271,7 @@
             // 
             this.labe.AutoSize = true;
             this.labe.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labe.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.labe.ForeColor = System.Drawing.Color.White;
             this.labe.Location = new System.Drawing.Point(14, 20);
             this.labe.Name = "labe";
             this.labe.Size = new System.Drawing.Size(125, 20);
@@ -299,6 +299,17 @@
             this.yearIncomePanel.Name = "yearIncomePanel";
             this.yearIncomePanel.Size = new System.Drawing.Size(237, 90);
             this.yearIncomePanel.TabIndex = 9;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.Black;
+            this.label15.Location = new System.Drawing.Point(14, 53);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(123, 15);
+            this.label15.TabIndex = 8;
+            this.label15.Text = "before any deductions";
             // 
             // asOfTotalRev
             // 
@@ -584,17 +595,6 @@
             this.roundedPanel1.Name = "roundedPanel1";
             this.roundedPanel1.Size = new System.Drawing.Size(235, 242);
             this.roundedPanel1.TabIndex = 5;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.Color.Black;
-            this.label15.Location = new System.Drawing.Point(14, 53);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(123, 15);
-            this.label15.TabIndex = 8;
-            this.label15.Text = "before any deductions";
             // 
             // income
             // 

@@ -46,40 +46,54 @@ namespace c_AccountingCashFlowSystem.Forms
         }
         private void load_listView_data()
         {
-            List<ExpenseCategory> expenses = db.getExpenses();
+            listViewExpensesSumarry.BeginUpdate();
+            listViewOperational.BeginUpdate();
 
-            foreach (var expense in expenses)
+            try
             {
-                ListViewItem item = new ListViewItem(expense.CategoryName.ToString());
-                item.SubItems.Add("P" + expense.amount.ToString());
+                listViewOperational.Items.Clear();
+                listViewExpensesSumarry.Items.Clear();
 
-                listViewOperational.Items.Add(item);
+                List<ExpenseCategory> expenses = db.getExpenses();
+
+                foreach (var expense in expenses)
+                {
+                    ListViewItem item = new ListViewItem(expense.CategoryName.ToString());
+                    item.SubItems.Add("P" + expense.amount.ToString());
+
+                    listViewOperational.Items.Add(item);
+                }
+
+                var monthlyExpenses = db.getIncomeAndExpensesSummaryMonthly("Expenses");
+                var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+
+                decimal grandTotal = 0;
+
+                for (int month = 1; month <= 12; month++)
+                {
+                    string monthName = monthNames[month - 1];
+                    if (string.IsNullOrEmpty(monthName)) continue;
+
+                    monthlyExpenses.TryGetValue(month, out decimal value);
+
+                    ListViewItem item = new ListViewItem(monthName);
+                    item.SubItems.Add("P" + value.ToString("N0"));
+
+                    listViewExpensesSumarry.Items.Add(item);
+
+                    grandTotal += value;
+                }
+
+                ListViewItem totalItem = new ListViewItem("Total");
+                totalItem.SubItems.Add("P" + grandTotal.ToString("N0"));
+
+                listViewExpensesSumarry.Items.Add(totalItem);
             }
-
-            var monthlyExpenses = db.getIncomeAndExpensesSummaryMonthly("Expenses");
-            var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
-
-            decimal grandTotal = 0;
-
-            for (int month = 1; month <= 12; month++)
+            finally
             {
-                string monthName = monthNames[month - 1];
-                if (string.IsNullOrEmpty(monthName)) continue;
-
-                monthlyExpenses.TryGetValue(month, out decimal value);
-
-                ListViewItem item = new ListViewItem(monthName);
-                item.SubItems.Add("P" + value.ToString("N0"));
-
-                listViewExpensesSumarry.Items.Add(item);
-
-                grandTotal += value;
+                listViewOperational.EndUpdate();
+                listViewExpensesSumarry.EndUpdate();
             }
-
-            ListViewItem totalItem = new ListViewItem("Total");
-            totalItem.SubItems.Add("P" + grandTotal.ToString("N0"));
-
-            listViewExpensesSumarry.Items.Add(totalItem);
             
         }
         private void expenses_Load(object sender, EventArgs e)
@@ -113,6 +127,7 @@ namespace c_AccountingCashFlowSystem.Forms
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    load_data();
                     load_listView_data();
                 }
             }

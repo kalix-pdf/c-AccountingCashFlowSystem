@@ -8,6 +8,7 @@ namespace c_AccountingCashFlowSystem.Forms
     public partial class dashboard : Form
     {
         private ClientDatabase db = new ClientDatabase();
+        private IEModel model = new IEModel();
         public dashboard()
         {
             InitializeComponent();
@@ -37,17 +38,17 @@ namespace c_AccountingCashFlowSystem.Forms
                 listViewEvents.Items.Add(item);
             }
         }
-        public void getTotalIncome()
+        private void load_data()
         {
-            int totalIncome = db.getTotalIncome();
+            decimal totalExpenses = model.getTotalExpenses();
+            expenseLabelData.Text = "P" + totalExpenses.ToString("N0");
+
+            decimal totalIncome = model.getTotalNetIncome();
             incomeLabelData.Text = "P" + totalIncome.ToString("N0");
         }
 
         private void dashboard_Load(object sender, EventArgs e)
         {
-            int totalExpenses = db.getTotalExpenses();
-            expenseLabelData.Text = "P" + totalExpenses.ToString("N0");
-
             listViewEvents.View = View.Details;
             listViewEvents.FullRowSelect = true;
             listViewEvents.GridLines = true;
@@ -63,7 +64,7 @@ namespace c_AccountingCashFlowSystem.Forms
             AutoSizeListViewColumns(listViewEvents);
 
             LoadEvents();
-            getTotalIncome();
+            load_data();
         }
         private void dashboard_Resize(object sender, EventArgs e)
         {
@@ -111,15 +112,10 @@ namespace c_AccountingCashFlowSystem.Forms
                     if (form.ShowDialog() == DialogResult.OK)
                     {
                         LoadEvents();
-                        getTotalIncome();
+                        load_data();
                     }
                 }
             }
-        }
-
-        private void panel5_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }
