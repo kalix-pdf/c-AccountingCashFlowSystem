@@ -34,7 +34,10 @@ namespace c_AccountingCashFlowSystem.Forms
 
         private void load_months()
         {
+            int selectedYear = (int)selectYear.SelectedItem;
             var monthNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames;
+            
+            var revenue = db.incomeAndExpenseAnnualReport("Income", selectedYear);
 
             for (int month = 1; month <= 12; month++)
             {
