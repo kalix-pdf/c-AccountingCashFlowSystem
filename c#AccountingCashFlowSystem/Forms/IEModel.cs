@@ -362,6 +362,58 @@ namespace c_AccountingCashFlowSystem.Forms
                 }
             }
         }
-        
+
+
+        //REPORTS HERE!
+        public Dictionary<int, decimal> incomeAndExpenseAnnualReport(string type, int year)
+        {
+            var result = new Dictionary<int, decimal>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(@"
+                    SELECT MONTH(CreatedAt) AS Month, SUM(Amount) As TotalIncome 
+                    FROM Transactions WHERE TransactionType = @type AND YEAR(CreatedAt) = @year
+                    GROUP BY MONTH(CreatedAt) ORDER BY Month;", conn))
+            {
+                cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@type", type);
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int month = reader.GetInt32(0);
+                        decimal total = reader.GetDecimal(1);
+
+                        result[month] = total;
+                    }
+                }
+            }
+
+            return result;
+        }
+        public List<int> getTransactionYear()
+        {
+            List<int> years = new List<int>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string Query = @"SELECT DISTINCT YEAR(CreatedAt) AS [Year] FROM Transactions ORDER BY [Year]";
+                using (SqlCommand cmd = new SqlCommand(Query, conn))
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            years.Add(reader.GetInt32(0));                
+                        }
+                    }
+                }
+            }
+
+            return years;
+        }
     }
 }

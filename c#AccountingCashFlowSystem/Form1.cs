@@ -83,7 +83,7 @@ namespace c_AccountingCashFlowSystem
         }
         private void reports_Click(object sender, EventArgs e)
         {
-            ActivateButton(sender);
+            openChildForm(new Forms.reports(), sender);
         }
 
         private void dashboard_Click(object sender, EventArgs e)
